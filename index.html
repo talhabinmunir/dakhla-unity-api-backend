@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dakhla Admin Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary-blue: #326AFD;
+            --accent-green: #D1FC57;
+            --accent-purple: #BB7BFF;
+
+            /* Neutrals */
+            --charcoal: #1E1E24;
+            --charcoal-light: #2B2B36;
+            --bg-color: #F4F6F9;
+            --white: #FFFFFF;
+            --text-dark: #1E1E24;
+            --text-light: #8A8B9F;
+            --danger: #FF4D4D;
+            --border-color: #E0E0E0;
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+        }
+
+        /* --- Header & Nav --- */
+        header {
+            background-color: var(--white);
+            padding: 15px 5%; /* Responsive padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: 0.3s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            height: 36px;
+            width: auto;
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 5%;
+        }
+
+        /* Controls Bar */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap; /* Allows stacking on mobile */
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+            min-width: 280px; /* Prevents squishing */
+        }
+
+        .search-wrapper span {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-blue);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: var(--white);
+            font-size: 15px;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 20px rgba(50, 106, 253, 0.15);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active { transform: translateY(0); }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(50, 106, 253, 0.25);
+        }
+
+        .btn-success {
+            background-color: var(--accent-green);
+            color: var(--charcoal);
+            box-shadow: 0 4px 12px rgba(209, 252, 87, 0.3);
+        }
+
+        .btn-refresh {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        /* --- University Cards Grid --- */
+        .grid {
+            display: grid;
+            /* Auto-fit creates columns based on min-width.
+               On mobile (below 320px), 1fr takes over. */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            transition: 0.3s;
+            position: relative;
+            border: 1px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-color: rgba(50, 106, 253, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .uni-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin: 0;
+            line-height: 1.3;
+            word-break: break-word; /* Prevents long names from breaking layout */
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0; /* Prevents badge from squishing */
+        }
+
+        .badge-private { background: #FDE8E8; color: #D63031; }
+        .badge-public { background: #E8F6EF; color: #27AE60; }
+
+        .uni-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .uni-meta div { display: flex; align-items: center; gap: 8px; }
+        .uni-meta .icon { font-size: 16px; color: var(--primary-blue); }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 8px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn-card {
+            flex: 1;
+            justify-content: center;
+            padding: 8px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-purple { background-color: var(--accent-purple); color: white; }
+        .btn-edit { background-color: #F0F2F5; color: var(--charcoal); }
+        .btn-delete { background-color: #FFF0F0; color: var(--danger); }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30, 30, 36, 0.7); /* Darker overlay */
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center; /* Centers modal vertically */
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 20px; /* Prevents modal touching screen edges on mobile */
+        }
+
+        .modal {
+            background: var(--white);
+            width: 100%;
+            max-width: 550px;
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            max-height: 90vh; /* Prevents overflow off screen */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-lg { max-width: 800px; }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title { font-size: 20px; font-weight: 700; color: var(--charcoal); margin: 0; }
+        .close-btn {
+            background: none; border: none; font-size: 28px; cursor: pointer;
+            color: var(--text-light); line-height: 1; padding: 0; margin-left: 10px;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding-right: 5px; /* Space for scrollbar */
+            flex: 1;
+        }
+
+        /* --- Responsive Forms --- */
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #EEE;
+            border-radius: 8px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            transition: 0.3s;
+            background: #FAFAFA;
+        }
+        .form-control:focus { border-color: var(--primary-blue); background: #FFF; }
+
+        .row-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* --- Program Form (CSS Grid) --- */
+        .program-edit-box {
+            background: #F4F6F9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #EAEAEA;
+        }
+
+        .prog-grid-row {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Desktop: 3 columns for top row */
+        .prog-row-top { grid-template-columns: 2fr 1fr 1fr; }
+        /* Desktop: 2 columns for bottom row */
+        .prog-row-bot { grid-template-columns: 1fr 2fr; }
+
+        /* --- Program List Items --- */
+        .programs-list { display: flex; flex-direction: column; gap: 10px; }
+        .program-item {
+            background: #FFF;
+            border: 1px solid #EEE;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .program-info h4 { margin: 0 0 4px 0; font-size: 15px; color: var(--primary-blue); }
+        .program-info p { margin: 0; font-size: 12px; color: var(--text-light); line-height: 1.4; }
+
+        .prog-actions {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            background: var(--accent-green);
+            color: var(--charcoal);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-right: 4px;
+            margin-top: 6px;
+        }
+
+        /* --- Loading Spinner --- */
+        #loadingOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #EEE;
+            border-top-color: var(--primary-blue); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ================= MEDIA QUERIES (Responsiveness) ================= */
+
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 20px;
+            }
+            .brand h1 {
+                font-size: 18px; /* Smaller Brand Text */
+            }
+            .container {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+
+            /* Stack controls on tablets/mobile */
+            .controls-bar {
+                flex-direction: column-reverse; /* Put Search on top visually if desired, or keep normal */
+                align-items: stretch;
+                gap: 10px;
+            }
+            .btn-refresh {
+                width: 100%;
+            }
+
+            /* Modal Adjustments */
+            .modal {
+                padding: 20px;
+                max-height: 85vh;
+            }
+            .row-group {
+                flex-direction: column;
+                gap: 15px; /* Stack form inputs vertically */
+            }
+
+            /* Make Program Form Stack vertically */
+            .prog-row-top, .prog-row-bot {
+                grid-template-columns: 1fr; /* Force single column */
+            }
+
+            /* Program List Item: Stack content and buttons */
+            .program-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .prog-actions {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 5px;
+            }
+            .prog-actions button {
+                flex: 1;
+            }
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+        .show { display: flex !important; opacity: 1 !important; }
+        .show .modal { transform: translateY(0) !important; }
+
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <div style="font-weight: 500; color: var(--primary-blue); font-size: 14px;">Connecting to Dakhla Cloud...</div>
+</div>
+
+<header>
+    <div class="brand">
+        <img src="logo.png" alt="Dakhla" onerror="this.style.display='none'">
+        <h1>ADMIN PANEL</h1>
+    </div>
+    <button class="btn btn-primary" onclick="openUniversityModal()">
+        <span class="material-icons-round">add_circle</span> <span style="display: none;">Add University</span>
+        Add University
+    </button>
+</header>
+
+<div class="container">
+
+    <div class="controls-bar">
+        <div class="search-wrapper">
+            <span class="material-icons-round">search</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search universities..." onkeyup="filterUniversities()">
+        </div>
+        <button class="btn btn-refresh" onclick="fetchData()">
+            <span class="material-icons-round">sync</span> Refresh
+        </button>
+    </div>
+
+    <div id="universityGrid" class="grid">
+    </div>
+</div>
+
+<div id="universityModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="uniModalTitle">Add University</h3>
+            <button class="close-btn" onclick="closeModal('universityModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="uniId">
+            <div class="form-group">
+                <label class="form-label">University Name</label>
+                <input type="text" id="uniName" class="form-control" placeholder="e.g. LUMS">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" id="uniLocation" class="form-control" placeholder="e.g. Lahore, Punjab">
+            </div>
+            <div class="row-group">
+                <div style="flex: 1;">
+                    <label class="form-label">Sector</label>
+                    <select id="uniSector" class="form-control">
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label class="form-label">Website URL</label>
+                    <input type="text" id="uniWebsite" class="form-control" placeholder="https://...">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 15px;">
+                <label class="form-label">Logo Image URL</label>
+                <input type="text" id="uniLogo" class="form-control" placeholder="https://example.com/logo.png">
+            </div>
+            <div class="row-group">
+                <div style="flex: 1;">
+                    <label class="form-label">Phone</label>
+                    <input type="text" id="uniPhone" class="form-control" placeholder="+92...">
+                </div>
+                <div style="flex: 1;">
+                    <label class="form-label">Email</label>
+                    <input type="text" id="uniEmail" class="form-control" placeholder="info@...">
+                </div>
+            </div>
+            <div style="margin-top: 25px;">
+                <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="saveUniversity()">
+                    Save University Details
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="programsModal" class="modal-overlay">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <div style="overflow: hidden;">
+                <h3 class="modal-title" id="progModalTitle">Manage Programs</h3>
+                <div style="font-size: 13px; color: var(--text-light); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    For: <span id="currentUniName" style="color: var(--primary-blue); font-weight: 600;"></span>
+                </div>
+            </div>
+            <button class="close-btn" onclick="closeModal('programsModal')">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="program-edit-box">
+                <h4 style="margin: 0 0 15px 0; color: var(--charcoal); font-size: 15px;">Add / Edit Program</h4>
+                <input type="hidden" id="progIndex">
+
+                <div class="prog-grid-row prog-row-top">
+                    <input type="text" id="progName" class="form-control" placeholder="Program Name (e.g. BS CS)">
+                    <input type="number" id="progMerit" class="form-control" placeholder="Min %">
+                    <input type="text" id="progDuration" class="form-control" placeholder="Duration">
+                </div>
+
+                <div class="prog-grid-row prog-row-bot">
+                    <input type="text" id="progDeadline" class="form-control" placeholder="Deadline (YYYY-MM-DD)">
+                    <input type="text" id="progTags" class="form-control" placeholder="Tags (e.g. IT, Engineering)">
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn btn-success" style="flex:1;" onclick="pushProgramToLocal()">
+                        <span class="material-icons-round">add_circle</span> Add to List
+                    </button>
+                    <button class="btn btn-edit" onclick="clearProgramForm()">Clear</button>
+                </div>
+            </div>
+
+            <h4 style="color: var(--charcoal); margin-bottom: 15px; font-size: 15px;">
+                Current Programs <span id="progCount" style="color: var(--text-light); font-weight: normal;">(0)</span>
+            </h4>
+            <div id="programsListContainer" class="programs-list">
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #EEE;">
+            <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="commitProgramsToBackend()">
+                <span class="material-icons-round">cloud_upload</span> Save All Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 🚨 CONFIG: Replace with your Render URL
+    const API_BASE = "https://dakhla-unity-api.onrender.com/api/universities";
+
+    let allUniversities = [];
+    let currentUniForPrograms = null;
+
+    // --- Init ---
+    window.onload = fetchData;
+
+    async function fetchData() {
+        const loader = document.getElementById('loadingOverlay');
+        loader.classList.remove('hidden');
+
+        try {
+            const res = await fetch(API_BASE);
+            if (!res.ok) throw new Error("Fetch failed");
+            allUniversities = await res.json();
+            renderGrid(allUniversities);
+            loader.classList.add('hidden');
+        } catch (err) {
+            alert("Error connecting to server. Check your connection.");
+            console.error(err);
+            loader.classList.add('hidden');
+        }
+    }
+
+    // --- Render ---
+    function renderGrid(data) {
+        const grid = document.getElementById('universityGrid');
+        grid.innerHTML = "";
+
+        if (data.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-light);">No data found.</div>`;
+            return;
+        }
+
+        data.forEach(uni => {
+            const badgeClass = (uni.sector && uni.sector.toLowerCase() === 'public') ? 'badge-public' : 'badge-private';
+            const progCount = uni.programs ? uni.programs.length : 0;
+
+            const cardHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="uni-name">${uni.name}</h3>
+                            <span class="badge ${badgeClass}">${uni.sector || 'Unknown'}</span>
+                        </div>
+                        <div class="uni-meta">
+                            <div><span class="material-icons-round icon">place</span> ${uni.location}</div>
+                            <div><span class="material-icons-round icon">school</span> ${progCount} Programs</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-card btn-purple" onclick='openProgramsModal("${uni.id}")'>
+                                <span class="material-icons-round" style="font-size: 16px;">list</span> Programs
+                            </button>
+                            <button class="btn btn-card btn-edit" onclick='openEditUniModal("${uni.id}")'>Edit</button>
+                            <button class="btn btn-card btn-delete" onclick='deleteUniversity("${uni.id}")'>Delete</button>
+                        </div>
+                    </div>
+                `;
+            grid.innerHTML += cardHTML;
+        });
+    }
+
+    function filterUniversities() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allUniversities.filter(u =>
+            u.name.toLowerCase().includes(query) ||
+            u.location.toLowerCase().includes(query)
+        );
+        renderGrid(filtered);
+    }
+
+    // --- University Logic ---
+    function openUniversityModal() {
+        document.getElementById('uniModalTitle').innerText = "Add University";
+        clearUniForm();
+        openModal('universityModal');
+    }
+
+    function openEditUniModal(id) {
+        const uni = allUniversities.find(u => u.id === id);
+        if (!uni) return;
+
+        document.getElementById('uniModalTitle').innerText = "Edit University";
+        document.getElementById('uniId').value = uni.id;
+        document.getElementById('uniName').value = uni.name;
+        document.getElementById('uniLocation').value = uni.location;
+        document.getElementById('uniSector').value = uni.sector;
+        document.getElementById('uniWebsite').value = uni.websiteUrl;
+        document.getElementById('uniPhone').value = uni.contactPhone || "";
+        document.getElementById('uniEmail').value = uni.contactEmail || "";
+        document.getElementById('uniLogo').value = uni.logoUrl || ""; // Load Logo
+        openModal('universityModal');
+    }
+
+    function clearUniForm() {
+        document.getElementById('uniId').value = "";
+        document.getElementById('uniName').value = "";
+        document.getElementById('uniLocation').value = "";
+        document.getElementById('uniWebsite').value = "";
+        document.getElementById('uniPhone').value = "";
+        document.getElementById('uniEmail').value = "";
+        document.getElementById('uniLogo').value = "";
+    }
+
+    async function saveUniversity() {
+        const id = document.getElementById('uniId').value;
+        const name = document.getElementById('uniName').value;
+
+        if (!name) { alert("Name is required"); return; }
+
+        const uniObj = {
+            name: name,
+            location: document.getElementById('uniLocation').value,
+            sector: document.getElementById('uniSector').value,
+            websiteUrl: document.getElementById('uniWebsite').value,
+            contactPhone: document.getElementById('uniPhone').value,
+            contactEmail: document.getElementById('uniEmail').value,
+            logoUrl: document.getElementById('uniLogo').value,
+            programs: id ? allUniversities.find(u => u.id === id).programs : [],
+            id: id || name.toLowerCase().replace(/[^a-z0-9]/g, '-') + "-" + Date.now().toString().slice(-4)
+        };
+
+        const method = id ? "PUT" : "POST";
+        const url = id ? `${API_BASE}/${id}` : API_BASE;
+
+        try {
+            const res = await fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(uniObj)
+            });
+            if (res.ok) {
+                closeModal('universityModal');
+                fetchData();
+            } else { alert("Failed to save."); }
+        } catch (e) { console.error(e); alert("Network Error"); }
+    }
+
+    async function deleteUniversity(id) {
+        if (!confirm("Are you sure? This deletes everything for this university.")) return;
+        try {
+            await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
+            fetchData();
+        } catch (e) { alert("Error deleting."); }
+    }
+
+    // --- Programs Logic ---
+    function openProgramsModal(uniId) {
+        currentUniForPrograms = JSON.parse(JSON.stringify(allUniversities.find(u => u.id === uniId)));
+        if (!currentUniForPrograms) return;
+
+        document.getElementById('currentUniName').innerText = currentUniForPrograms.name;
+        renderProgramsList();
+        clearProgramForm();
+        openModal('programsModal');
+    }
+
+    function renderProgramsList() {
+        const container = document.getElementById('programsListContainer');
+        const list = currentUniForPrograms.programs || [];
+        document.getElementById('progCount').innerText = `(${list.length})`;
+
+        container.innerHTML = "";
+        if (list.length === 0) {
+            container.innerHTML = "<div style='text-align:center; padding:20px; color:#888; font-size:13px;'>No programs added yet.</div>";
+            return;
+        }
+
+        list.forEach((prog, index) => {
+            const tags = prog.streamTags ? prog.streamTags.map(t => `<span class="tag-pill">${t}</span>`).join('') : '';
+            const html = `
+                    <div class="program-item">
+                        <div class="program-info">
+                            <h4>${prog.name}</h4>
+                            <p>Merit: <strong>${prog.minRequiredPercentage}%</strong> | ${prog.duration || 'N/A'}</p>
+                            <div style="margin-top:5px;">${tags}</div>
+                        </div>
+                        <div class="prog-actions">
+                            <button class="btn btn-edit" style="padding:6px 12px; font-size:12px;" onclick="loadProgramIntoForm(${index})">Edit</button>
+                            <button class="btn btn-delete" style="padding:6px 12px; font-size:12px;" onclick="removeProgram(${index})">X</button>
+                        </div>
+                    </div>
+                `;
+            container.innerHTML += html;
+        });
+    }
+
+    function loadProgramIntoForm(index) {
+        const prog = currentUniForPrograms.programs[index];
+        document.getElementById('progIndex').value = index;
+        document.getElementById('progName').value = prog.name;
+        document.getElementById('progMerit').value = prog.minRequiredPercentage;
+        document.getElementById('progDuration').value = prog.duration;
+        document.getElementById('progDeadline').value = prog.applicationDeadline;
+        document.getElementById('progTags').value = prog.streamTags ? prog.streamTags.join(', ') : "";
+    }
+
+    function clearProgramForm() {
+        document.getElementById('progIndex').value = "-1";
+        document.getElementById('progName').value = "";
+        document.getElementById('progMerit').value = "";
+        document.getElementById('progDuration').value = "";
+        document.getElementById('progDeadline').value = "";
+        document.getElementById('progTags').value = "";
+    }
+
+    function pushProgramToLocal() {
+        const index = parseInt(document.getElementById('progIndex').value);
+        const name = document.getElementById('progName').value;
+        if (!name) { alert("Program Name required"); return; }
+
+        const rawTags = document.getElementById('progTags').value;
+        const tagsArray = rawTags.split(',').map(t => t.trim()).filter(t => t !== "");
+
+        const progObj = {
+            programId: index >= 0 ? currentUniForPrograms.programs[index].programId : `prog-${Date.now()}`,
+            name: name,
+            minRequiredPercentage: parseFloat(document.getElementById('progMerit').value) || 0,
+            duration: document.getElementById('progDuration').value,
+            applicationDeadline: document.getElementById('progDeadline').value,
+            streamTags: tagsArray
+        };
+
+        if (index >= 0) {
+            currentUniForPrograms.programs[index] = progObj;
+        } else {
+            if (!currentUniForPrograms.programs) currentUniForPrograms.programs = [];
+            currentUniForPrograms.programs.push(progObj);
+        }
+        renderProgramsList();
+        clearProgramForm();
+    }
+
+    function removeProgram(index) {
+        if (!confirm("Delete program?")) return;
+        currentUniForPrograms.programs.splice(index, 1);
+        renderProgramsList();
+    }
+
+    async function commitProgramsToBackend() {
+        if (!currentUniForPrograms) return;
+        const url = `${API_BASE}/${currentUniForPrograms.id}`;
+        const btn = document.querySelector('#programsModal .btn-primary');
+        const originalText = btn.innerHTML;
+        btn.innerText = "Saving...";
+
+        try {
+            const res = await fetch(url, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(currentUniForPrograms)
+            });
+            if (res.ok) {
+                alert("Programs Saved!");
+                closeModal('programsModal');
+                fetchData();
+            } else { alert("Save failed."); }
+        } catch (e) { console.error(e); alert("Network error."); }
+        finally { btn.innerHTML = originalText; }
+    }
+
+    // --- Modals ---
+    function openModal(id) {
+        const el = document.getElementById(id);
+        el.style.display = 'flex';
+        setTimeout(() => { el.classList.add('show'); }, 10);
+    }
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        el.classList.remove('show');
+        setTimeout(() => { el.style.display = 'none'; }, 300);
+    }
+    window.onclick = function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('show');
+            setTimeout(() => { e.target.style.display = 'none'; }, 300);
+        }
+    }
+</script>
+</body>
+</html>
