@@ -1,4 +1,4 @@
-// server.js - Final Secured Version
+// server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,17 +6,20 @@ const cors = require('cors');
 const University = require('./universityModel');
 
 const app = express();
-app.use(express.json());
 
-// 1. ROBUST CORS CONFIGURATION
+// 1. CORS MUST COME FIRST (Move this to the top)
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'x-api-key']
 }));
 
-// 2. EXPLICIT PRE-FLIGHT HANDLER (Fixed for PathError)
-app.options(/(.*)/, cors()); // <--- CHANGED THIS LINE
+// 2. Handle Preflight Requests immediately
+app.options(/(.*)/, cors());
+
+// 3. Body Parser comes AFTER CORS
+app.use(express.json());
+
 
 // --- 1. CONNECT TO MONGODB ---
 mongoose.connect(process.env.MONGO_URI)
