@@ -1,4 +1,4 @@
-// server.js - Secured Version
+// server.js - Final Secured Version
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -7,14 +7,16 @@ const University = require('./universityModel');
 
 const app = express();
 app.use(express.json());
+
+// 1. ROBUST CORS CONFIGURATION
 app.use(cors({
-    origin: '*', // Allow all origins (GitHub Pages)
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'x-api-key']
 }));
 
-// 2. EXPLICIT PRE-FLIGHT HANDLER (Crucial for DELETE requests)
-app.options('*', cors()); // Enable pre-flight across-the-board
+// 2. EXPLICIT PRE-FLIGHT HANDLER (Fixed for PathError)
+app.options(/(.*)/, cors()); // <--- CHANGED THIS LINE
 
 // --- 1. CONNECT TO MONGODB ---
 mongoose.connect(process.env.MONGO_URI)
@@ -23,11 +25,9 @@ mongoose.connect(process.env.MONGO_URI)
 
 // --- 2. SECURITY MIDDLEWARE ---
 const verifyApiKey = (req, res, next) => {
-    // Get key from header
     const userKey = req.headers['x-api-key'];
     const serverKey = process.env.ADMIN_API_KEY;
 
-    // Check if keys match
     if (!userKey || userKey !== serverKey) {
         return res.status(403).json({ message: "⛔ Access Denied: Invalid API Key" });
     }
@@ -36,9 +36,7 @@ const verifyApiKey = (req, res, next) => {
 
 // --- 3. API ROUTES ---
 
-// PUBLIC ROUTES (Unity App & Dashboard Read-Only)
-// No verifyApiKey needed here, so Unity keeps working seamlessly.
-
+// Public Routes
 app.get('/api/unity-export', async (req, res) => {
     try {
         const allUniversities = await University.find();
@@ -57,10 +55,7 @@ app.get('/api/universities', async (req, res) => {
     }
 });
 
-// SECURED ROUTES (Dashboard Write Access)
-// verifyApiKey is added as a second argument. Code runs only if key is correct.
-
-// Add University
+// Secured Routes
 app.post('/api/universities', verifyApiKey, async (req, res) => {
     const uni = new University(req.body);
     try {
@@ -71,7 +66,6 @@ app.post('/api/universities', verifyApiKey, async (req, res) => {
     }
 });
 
-// Update University
 app.put('/api/universities/:id', verifyApiKey, async (req, res) => {
     try {
         const updatedUni = await University.findOneAndUpdate(
@@ -85,7 +79,6 @@ app.put('/api/universities/:id', verifyApiKey, async (req, res) => {
     }
 });
 
-// Delete University
 app.delete('/api/universities/:id', verifyApiKey, async (req, res) => {
     try {
         await University.findOneAndDelete({ id: req.params.id });
