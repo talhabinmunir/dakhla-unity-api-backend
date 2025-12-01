@@ -7,7 +7,11 @@ const University = require('./universityModel');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow connections from any URL (like your GitHub Pages)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow DELETE
+    allowedHeaders: ['Content-Type', 'x-api-key'] // Explicitly allow your custom security key
+}));
 
 // --- 1. CONNECT TO MONGODB ---
 mongoose.connect(process.env.MONGO_URI)
