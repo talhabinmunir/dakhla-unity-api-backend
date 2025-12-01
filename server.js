@@ -8,10 +8,13 @@ const University = require('./universityModel');
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: '*', // Allow connections from any URL (like your GitHub Pages)
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow DELETE
-    allowedHeaders: ['Content-Type', 'x-api-key'] // Explicitly allow your custom security key
+    origin: '*', // Allow all origins (GitHub Pages)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-api-key']
 }));
+
+// 2. EXPLICIT PRE-FLIGHT HANDLER (Crucial for DELETE requests)
+app.options('*', cors()); // Enable pre-flight across-the-board
 
 // --- 1. CONNECT TO MONGODB ---
 mongoose.connect(process.env.MONGO_URI)
