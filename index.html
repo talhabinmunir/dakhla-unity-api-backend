@@ -8,47 +8,119 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
     <style>
-        /* --- CSS STYLES --- */
         :root {
-            --primary-blue: #326AFD; --accent-green: #D1FC57; --accent-purple: #BB7BFF;
-            --charcoal: #1E1E24; --bg-color: #F4F6F9; --white: #FFFFFF;
-            --text-dark: #1E1E24; --text-light: #8A8B9F; --danger: #FF4D4D; --danger-bg: #FFE5E5;
+            /* Brand Colors */
+            --primary-blue: #326AFD;
+            --accent-green: #D1FC57;
+            --accent-purple: #BB7BFF;
+
+            /* Neutrals */
+            --charcoal: #1E1E24;
+            --bg-color: #F4F6F9;
+            --white: #FFFFFF;
+            --text-dark: #1E1E24;
+            --text-light: #8A8B9F;
+            --danger: #FF4D4D;
+            --danger-bg: #FFE5E5;
             --border-color: #E0E0E0;
         }
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-dark); margin: 0; padding: 0; font-size: 15px; }
 
-        /* Header */
-        header { background-color: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand img { height: 36px; width: auto; }
         .brand h1 { font-size: 22px; font-weight: 700; color: var(--primary-blue); margin: 0; letter-spacing: 0.5px; }
 
-        /* Container & Controls */
+        /* --- Layout --- */
         .container { max-width: 1400px; margin: 30px auto; padding: 0 5%; }
-        .controls-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap; }
-        .search-wrapper { flex: 1; position: relative; min-width: 280px; }
-        .search-wrapper span { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); }
-        .search-input { width: 100%; padding: 14px 15px 14px 45px; border: 2px solid transparent; border-radius: 12px; background: var(--white); font-size: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: 0.3s; }
-        .search-input:focus { border-color: var(--primary-blue); box-shadow: 0 4px 20px rgba(50, 106, 253, 0.15); }
 
-        /* Buttons */
-        .btn { padding: 12px 20px; border-radius: 10px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; white-space: nowrap; }
-        .btn:hover { transform: translateY(-2px); opacity: 0.95; } .btn:active { transform: translateY(0); }
+        /* Controls Bar (Updated for Filters) */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+            background: var(--white);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .search-wrapper { flex: 2; position: relative; min-width: 250px; }
+        .search-wrapper span { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); }
+
+        .search-input {
+            width: 100%; padding: 12px 15px 12px 45px;
+            border: 2px solid #EEE; border-radius: 10px;
+            background: #FAFAFA; font-size: 15px; transition: 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary-blue); background: #FFF; }
+
+        /* Filter Dropdowns */
+        .filter-select {
+            flex: 1;
+            min-width: 160px;
+            padding: 12px;
+            border: 2px solid #EEE;
+            border-radius: 10px;
+            background: #FAFAFA;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+            color: var(--charcoal);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .filter-select:hover { border-color: #CCC; }
+        .filter-select:focus { border-color: var(--primary-blue); background: #FFF; }
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 12px 20px; border-radius: 10px; border: none;
+            font-weight: 600; font-size: 14px; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; transition: 0.2s; white-space: nowrap;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.95; }
+        .btn:active { transform: translateY(0); }
+
         .btn-primary { background-color: var(--primary-blue); color: white; box-shadow: 0 4px 12px rgba(50, 106, 253, 0.25); }
         .btn-success { background-color: var(--accent-green); color: var(--charcoal); box-shadow: 0 4px 12px rgba(209, 252, 87, 0.3); }
-        .btn-refresh { background-color: var(--white); color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+        .btn-refresh { background-color: var(--bg-color); color: var(--text-dark); border: 1px solid #ddd; }
 
-        /* Icon Buttons */
+        /* Icon Buttons for Lists */
         .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
         .btn-edit-icon { background: #EEF2FF; color: var(--primary-blue); } .btn-edit-icon:hover { background: var(--primary-blue); color: white; transform: scale(1.05); }
         .btn-delete-icon { background: #FFF0F0; color: var(--danger); margin-left: 0; } .btn-delete-icon:hover { background: var(--danger); color: white; transform: scale(1.05); }
 
-        /* Grid & Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        /* --- Cards --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
         .card { background: var(--white); border-radius: 16px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid transparent; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-color: rgba(50, 106, 253, 0.1); }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 10px; }
@@ -64,14 +136,7 @@
         .btn-edit { background-color: #F0F2F5; color: var(--charcoal); }
         .btn-delete { background-color: #FFF0F0; color: var(--danger); }
 
-        /* Forms */
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control { width: 100%; padding: 12px; border: 2px solid #EEE; border-radius: 8px; font-family: 'Roboto', sans-serif; font-size: 14px; background: #FAFAFA; transition: 0.3s; }
-        .form-control:focus { border-color: var(--primary-blue); background: #FFF; }
-        .row-group { display: flex; gap: 15px; }
-
-        /* Modals */
+        /* --- Modals & Forms --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 36, 0.7); backdrop-filter: blur(3px); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
         .modal { background: var(--white); width: 100%; max-width: 550px; border-radius: 16px; padding: 25px; transform: translateY(20px); transition: transform 0.3s; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .modal-lg { max-width: 800px; }
@@ -79,6 +144,12 @@
         .modal-title { font-size: 20px; font-weight: 700; color: var(--charcoal); margin: 0; }
         .close-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0; margin-left: 10px; }
         .modal-body { overflow-y: auto; padding-right: 5px; flex: 1; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control { width: 100%; padding: 12px; border: 2px solid #EEE; border-radius: 8px; font-family: 'Roboto', sans-serif; font-size: 14px; background: #FAFAFA; transition: 0.3s; }
+        .form-control:focus { border-color: var(--primary-blue); background: #FFF; }
+        .row-group { display: flex; gap: 15px; }
 
         /* Program List */
         .program-edit-box { background: #F4F6F9; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #EAEAEA; }
@@ -91,12 +162,12 @@
         .prog-actions { display: flex; flex-direction: row; gap: 10px; flex-shrink: 0; align-items: center; }
         .tag-pill { display: inline-block; background: var(--accent-green); color: var(--charcoal); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-right: 4px; margin-top: 6px; }
 
-        /* Loading & Mobile */
+        /* Loading */
         #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { width: 40px; height: 40px; border: 4px solid #EEE; border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .hidden { display: none !important; } .show { display: flex !important; opacity: 1 !important; } .show .modal { transform: translateY(0) !important; }
-        @media (max-width: 768px) { .row-group { flex-direction: column; gap: 0; } .prog-grid-row { display: flex; flex-direction: column; gap: 0; } .program-item { flex-direction: column; align-items: flex-start; } .prog-actions { width: 100%; display: flex; justify-content: flex-end; margin-top: 10px; } }
+        @media (max-width: 768px) { .row-group { flex-direction: column; gap: 0; } .prog-grid-row { display: flex; flex-direction: column; gap: 0; } .program-item { flex-direction: column; align-items: flex-start; } .prog-actions { width: 100%; display: flex; justify-content: flex-end; margin-top: 10px; } .controls-bar { flex-direction: column; align-items: stretch; } }
     </style>
 </head>
 <body>
@@ -120,10 +191,10 @@
 <header>
     <div class="brand">
         <img src="logo.png" alt="Dakhla Logo" onerror="this.style.display='none'">
-        <h1>DAKHLA ADMIN</h1>
+        <h1>DASHBOARD</h1>
     </div>
     <div style="display: flex; gap: 10px;">
-        <button class="btn btn-edit" onclick="logout()">
+        <button class="btn btn-edit" onclick="logout()" title="Logout">
             <span class="material-icons-round">logout</span>
         </button>
         <button class="btn btn-primary" onclick="openUniversityModal()">
@@ -136,12 +207,30 @@
     <div class="controls-bar">
         <div class="search-wrapper">
             <span class="material-icons-round">search</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search universities..." onkeyup="filterUniversities()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by name..." onkeyup="applyFilters()">
         </div>
+
+        <select id="sectorFilter" class="filter-select" onchange="applyFilters()">
+            <option value="">All Sectors</option>
+            <option value="Public">Public</option>
+            <option value="Private">Private</option>
+        </select>
+
+        <select id="locationFilter" class="filter-select" onchange="applyFilters()">
+            <option value="">All Locations</option>
+        </select>
+
+        <select id="sortOrder" class="filter-select" onchange="applyFilters()">
+            <option value="az">Sort: A-Z</option>
+            <option value="za">Sort: Z-A</option>
+            <option value="progs">Sort: Most Programs</option>
+        </select>
+
         <button class="btn btn-refresh" onclick="fetchData()">
-            <span class="material-icons-round">sync</span> Refresh
+            <span class="material-icons-round">sync</span>
         </button>
     </div>
+
     <div id="universityGrid" class="grid"></div>
 </div>
 
@@ -153,23 +242,20 @@
         </div>
         <div class="modal-body">
             <input type="hidden" id="uniId">
-
             <div class="form-group">
                 <label class="form-label">University Name</label>
                 <input type="text" id="uniName" class="form-control" placeholder="e.g. LUMS">
             </div>
-
             <div class="row-group">
                 <div class="form-group" style="flex:1;">
                     <label class="form-label">Location</label>
-                    <input type="text" id="uniLocation" class="form-control" placeholder="e.g. Lahore, Punjab">
+                    <input type="text" id="uniLocation" class="form-control" placeholder="e.g. Lahore">
                 </div>
                 <div class="form-group" style="flex:1;">
                     <label class="form-label">Full Address</label>
-                    <input type="text" id="uniAddress" class="form-control" placeholder="e.g. DHA Phase 5...">
+                    <input type="text" id="uniAddress" class="form-control" placeholder="Detailed Address...">
                 </div>
             </div>
-
             <div class="row-group">
                 <div class="form-group" style="flex:1;">
                     <label class="form-label">Sector</label>
@@ -183,12 +269,10 @@
                     <input type="text" id="uniWebsite" class="form-control" placeholder="https://...">
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Logo Image URL</label>
                 <input type="text" id="uniLogo" class="form-control" placeholder="https://example.com/logo.png">
             </div>
-
             <div class="row-group">
                 <div class="form-group" style="flex:1;">
                     <label class="form-label">Phone</label>
@@ -199,7 +283,6 @@
                     <input type="text" id="uniEmail" class="form-control" placeholder="info@...">
                 </div>
             </div>
-
             <div style="margin-top: 20px;">
                 <button class="btn btn-primary" style="width: 100%;" onclick="saveUniversity()">Save University Details</button>
             </div>
@@ -218,12 +301,10 @@
             </div>
             <button class="close-btn" onclick="closeModal('programsModal')">&times;</button>
         </div>
-
         <div class="modal-body">
             <div class="program-edit-box">
                 <h4 style="margin: 0 0 15px 0; color: var(--charcoal); font-size: 15px;">Add / Edit Program</h4>
                 <input type="hidden" id="progIndex">
-
                 <div class="row-group prog-grid-row">
                     <div class="form-group" style="flex: 2;">
                         <label class="form-label">Program Name</label>
@@ -238,7 +319,6 @@
                         <input type="text" id="progDuration" class="form-control" placeholder="4 years">
                     </div>
                 </div>
-
                 <div class="row-group prog-grid-row">
                     <div class="form-group" style="flex: 1;">
                         <label class="form-label">Deadline</label>
@@ -249,7 +329,6 @@
                         <input type="text" id="progTags" class="form-control" placeholder="IT, Engineering, Medical">
                     </div>
                 </div>
-
                 <div style="display: flex; gap: 10px; margin-top: 5px;">
                     <button class="btn btn-success" style="flex:1;" onclick="pushProgramToLocal()">
                         <span class="material-icons-round">add_circle</span> Add to List
@@ -257,13 +336,11 @@
                     <button class="btn btn-edit" onclick="clearProgramForm()">Clear</button>
                 </div>
             </div>
-
             <h4 style="color: var(--charcoal); margin-bottom: 15px; font-size: 15px;">
                 Current Programs <span id="progCount" style="color: var(--text-light); font-weight: normal;">(0)</span>
             </h4>
             <div id="programsListContainer" class="programs-list"></div>
         </div>
-
         <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #EEE;">
             <button class="btn btn-primary" style="width: 100%;" onclick="commitProgramsToBackend()">
                 <span class="material-icons-round">cloud_upload</span> Save All Changes to Cloud
@@ -310,48 +387,55 @@
             const res = await fetch(API_BASE);
             if (!res.ok) throw new Error("Fetch failed");
             allUniversities = await res.json();
-            renderGrid(allUniversities);
+
+            // Populate Location Dropdown automatically
+            populateLocations(allUniversities);
+
+            applyFilters(); // Initial render
         } catch (err) {
             console.error(err);
+            alert("Error fetching data. Check server.");
         }
         document.getElementById('loadingOverlay').classList.add('hidden');
     }
 
-    // --- Helper: Send Request with Key ---
-    async function sendRequest(url, method, body) {
-        try {
-            // Prepare Options
-            const options = {
-                method: method,
-                headers: { "x-api-key": ADMIN_KEY }
-            };
+    // --- Dynamic Filter Population ---
+    function populateLocations(data) {
+        const locSelect = document.getElementById('locationFilter');
+        const uniqueLocs = [...new Set(data.map(u => u.location ? u.location.trim() : "").filter(l => l !== ""))].sort();
 
-            // Only add Body and Content-Type if it is NOT a DELETE request
-            if (method !== "DELETE") {
-                options.headers["Content-Type"] = "application/json";
-                options.body = JSON.stringify(body);
-            }
+        // Keep first option "All Locations"
+        locSelect.innerHTML = '<option value="">All Locations</option>';
+        uniqueLocs.forEach(loc => {
+            locSelect.innerHTML += `<option value="${loc}">${loc}</option>`;
+        });
+    }
 
-            // 🚨 URL Encoding: Ensures IDs with spaces don't break the link
-            const safeUrl = url;
+    // --- MAIN FILTER & SORT LOGIC ---
+    function applyFilters() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const sector = document.getElementById('sectorFilter').value;
+        const location = document.getElementById('locationFilter').value;
+        const sortBy = document.getElementById('sortOrder').value;
 
-            const res = await fetch(safeUrl, options);
+        // 1. Filter
+        let filtered = allUniversities.filter(u => {
+            const matchesSearch = u.name.toLowerCase().includes(query) || (u.location && u.location.toLowerCase().includes(query));
+            const matchesSector = sector === "" || (u.sector && u.sector === sector);
+            const matchesLocation = location === "" || (u.location && u.location.trim() === location);
+            return matchesSearch && matchesSector && matchesLocation;
+        });
 
-            if(res.status === 403) {
-                alert("⛔ Access Denied: Invalid API Key. Please logout and enter the correct key.");
-                return false;
-            }
-            if(!res.ok) {
-                const errorText = await res.text();
-                alert(`Server Error (${res.status}): ${errorText}`);
-                return false;
-            }
-            return true;
-        } catch(e) {
-            alert("Network Error: Could not connect to the server.");
-            console.error(e);
-            return false;
+        // 2. Sort
+        if (sortBy === 'az') {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortBy === 'za') {
+            filtered.sort((a, b) => b.name.localeCompare(a.name));
+        } else if (sortBy === 'progs') {
+            filtered.sort((a, b) => (b.programs?.length || 0) - (a.programs?.length || 0));
         }
+
+        renderGrid(filtered);
     }
 
     // --- Render ---
@@ -359,7 +443,7 @@
         const grid = document.getElementById('universityGrid');
         grid.innerHTML = "";
         if (data.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-light);">No data found.</div>`;
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-light);">No data found matching filters.</div>`;
             return;
         }
         data.forEach(uni => {
@@ -385,25 +469,31 @@
         });
     }
 
-    function filterUniversities() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        renderGrid(allUniversities.filter(u => u.name.toLowerCase().includes(query) || u.location.toLowerCase().includes(query)));
+    // --- Helper: Send Request with Key ---
+    async function sendRequest(url, method, body) {
+        try {
+            const options = { method: method, headers: { "x-api-key": ADMIN_KEY } };
+            if (method !== "DELETE") {
+                options.headers["Content-Type"] = "application/json";
+                options.body = JSON.stringify(body);
+            }
+            const safeUrl = url;
+            const res = await fetch(safeUrl, options);
+            if(res.status === 403) { alert("⛔ Access Denied: Invalid Key."); return false; }
+            if(!res.ok) { const txt = await res.text(); alert(`Server Error: ${txt}`); return false; }
+            return true;
+        } catch(e) { alert("Network Error"); return false; }
     }
 
     // --- University CRUD ---
-    function openUniversityModal() {
-        document.getElementById('uniModalTitle').innerText = "Add University";
-        clearUniForm();
-        openModal('universityModal');
-    }
+    function openUniversityModal() { document.getElementById('uniModalTitle').innerText = "Add University"; clearUniForm(); openModal('universityModal'); }
     function openEditUniModal(id) {
-        const uni = allUniversities.find(u => u.id === id);
-        if (!uni) return;
+        const uni = allUniversities.find(u => u.id === id); if (!uni) return;
         document.getElementById('uniModalTitle').innerText = "Edit University";
         document.getElementById('uniId').value = uni.id;
         document.getElementById('uniName').value = uni.name;
         document.getElementById('uniLocation').value = uni.location;
-        document.getElementById('uniAddress').value = uni.address || ""; // ✅ Load Address
+        document.getElementById('uniAddress').value = uni.address || "";
         document.getElementById('uniSector').value = uni.sector;
         document.getElementById('uniWebsite').value = uni.websiteUrl;
         document.getElementById('uniPhone').value = uni.contactPhone || "";
@@ -413,42 +503,31 @@
     }
     function clearUniForm() {
         document.getElementById('uniId').value = ""; document.getElementById('uniName').value = "";
-        document.getElementById('uniLocation').value = ""; document.getElementById('uniAddress').value = ""; // ✅ Clear Address
-        document.getElementById('uniWebsite').value = "";
-        document.getElementById('uniPhone').value = ""; document.getElementById('uniEmail').value = "";
-        document.getElementById('uniLogo').value = "";
+        document.getElementById('uniLocation').value = ""; document.getElementById('uniAddress').value = "";
+        document.getElementById('uniWebsite').value = ""; document.getElementById('uniPhone').value = "";
+        document.getElementById('uniEmail').value = ""; document.getElementById('uniLogo').value = "";
     }
     async function saveUniversity() {
         const id = document.getElementById('uniId').value;
         const name = document.getElementById('uniName').value;
         if (!name) { alert("Name required"); return; }
-
-        // ✅ Clean ID Generation to prevent broken URLs on Delete
-        const generatedId = name.trim().toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with -
-                .replace(/^-+|-+$/g, '') // Trim leading/trailing -
-            + "-" + Date.now().toString().slice(-4);
-
+        const generatedId = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') + "-" + Date.now().toString().slice(-4);
         const uniObj = {
             name, location: document.getElementById('uniLocation').value,
-            address: document.getElementById('uniAddress').value, // ✅ Save Address
+            address: document.getElementById('uniAddress').value,
             sector: document.getElementById('uniSector').value, websiteUrl: document.getElementById('uniWebsite').value,
             contactPhone: document.getElementById('uniPhone').value, contactEmail: document.getElementById('uniEmail').value,
             logoUrl: document.getElementById('uniLogo').value,
             programs: id ? allUniversities.find(u => u.id === id).programs : [],
-            id: id || generatedId // Use safer ID generation
+            id: id || generatedId
         };
         const success = await sendRequest(id ? `${API_BASE}/${id}` : API_BASE, id ? "PUT" : "POST", uniObj);
         if (success) { closeModal('universityModal'); fetchData(); }
     }
     async function deleteUniversity(id) {
-        if (!confirm("Delete this university? This cannot be undone.")) return;
-        // The logic here handles the request. If it fails, the detailed alert in sendRequest will show why.
+        if (!confirm("Delete this university?")) return;
         const success = await sendRequest(`${API_BASE}/${id}`, "DELETE", null);
-        if (success) {
-            alert("University Deleted Successfully.");
-            fetchData();
-        }
+        if (success) { alert("Deleted."); fetchData(); }
     }
 
     // --- Programs Logic ---
@@ -459,8 +538,7 @@
         renderProgramsList(); clearProgramForm(); openModal('programsModal');
     }
     function renderProgramsList() {
-        const c = document.getElementById('programsListContainer');
-        c.innerHTML = "";
+        const c = document.getElementById('programsListContainer'); c.innerHTML = "";
         const list = currentUniForPrograms.programs || [];
         document.getElementById('progCount').innerText = `(${list.length})`;
         if (list.length === 0) { c.innerHTML = "<div style='text-align:center; padding:20px; color:#888;'>No programs.</div>"; return; }
@@ -474,12 +552,8 @@
                             <div style="margin-top:5px;">${tags}</div>
                         </div>
                         <div class="prog-actions">
-                            <button class="btn-icon btn-edit-icon" onclick="loadProgramIntoForm(${i})">
-                                <span class="material-icons-round" style="font-size:18px;">edit</span>
-                            </button>
-                            <button class="btn-icon btn-delete-icon" onclick="removeProgram(${i})">
-                                <span class="material-icons-round" style="font-size:18px;">close</span>
-                            </button>
+                            <button class="btn-icon btn-edit-icon" onclick="loadProgramIntoForm(${i})"><span class="material-icons-round" style="font-size:18px;">edit</span></button>
+                            <button class="btn-icon btn-delete-icon" onclick="removeProgram(${i})"><span class="material-icons-round" style="font-size:18px;">close</span></button>
                         </div>
                     </div>`;
         });
@@ -513,11 +587,7 @@
         else { if(!currentUniForPrograms.programs) currentUniForPrograms.programs=[]; currentUniForPrograms.programs.push(p); }
         renderProgramsList(); clearProgramForm();
     }
-    function removeProgram(i) {
-        if(!confirm("Remove program?")) return;
-        currentUniForPrograms.programs.splice(i, 1);
-        renderProgramsList();
-    }
+    function removeProgram(i) { if(!confirm("Remove program?")) return; currentUniForPrograms.programs.splice(i, 1); renderProgramsList(); }
     async function commitProgramsToBackend() {
         const btn = document.querySelector('#programsModal .btn-primary');
         const originalText = btn.innerHTML; btn.innerHTML = "Saving...";
