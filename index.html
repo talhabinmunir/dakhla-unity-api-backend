@@ -320,25 +320,36 @@
     // --- Helper: Send Request with Key ---
     async function sendRequest(url, method, body) {
         try {
-            const res = await fetch(url, {
+            // Prepare Options
+            const options = {
                 method: method,
-                headers: { "Content-Type": "application/json", "x-api-key": ADMIN_KEY },
-                body: JSON.stringify(body)
-            });
+                headers: { "x-api-key": ADMIN_KEY }
+            };
 
-            // 🛑 BETTER ERROR HANDLING FOR DELETE 🛑
+            // Only add Body and Content-Type if it is NOT a DELETE request
+            if (method !== "DELETE") {
+                options.headers["Content-Type"] = "application/json";
+                options.body = JSON.stringify(body);
+            }
+
+            // 🚨 URL Encoding: Ensures IDs with spaces don't break the link
+            const safeUrl = url;
+
+            const res = await fetch(safeUrl, options);
+
             if(res.status === 403) {
                 alert("⛔ Access Denied: Invalid API Key. Please logout and enter the correct key.");
                 return false;
             }
             if(!res.ok) {
-                const errorText = await res.text(); // Get specific error from server
+                const errorText = await res.text();
                 alert(`Server Error (${res.status}): ${errorText}`);
                 return false;
             }
             return true;
         } catch(e) {
             alert("Network Error: Could not connect to the server.");
+            console.error(e);
             return false;
         }
     }
