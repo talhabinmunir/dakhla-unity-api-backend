@@ -4,602 +4,1315 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dakhla Admin Dashboard</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
     <style>
         :root {
-            /* Brand Colors */
-            --primary-blue: #326AFD;
-            --accent-green: #D1FC57;
-            --accent-purple: #BB7BFF;
-
-            /* Neutrals */
-            --charcoal: #1E1E24;
-            --bg-color: #F4F6F9;
-            --white: #FFFFFF;
-            --text-dark: #1E1E24;
-            --text-light: #8A8B9F;
-            --danger: #FF4D4D;
-            --danger-bg: #FFE5E5;
-            --border-color: #E0E0E0;
+            --blue: #326AFD;
+            --blue-light: #EEF3FF;
+            --blue-mid: #C7D8FE;
+            --green: #D1FC57;
+            --green-dark: #8FB800;
+            --purple: #BB7BFF;
+            --purple-light: #F3EEFF;
+            --charcoal: #111827;
+            --charcoal-mid: #374151;
+            --text-secondary: #6B7280;
+            --text-tertiary: #9CA3AF;
+            --bg: #F7F8FC;
+            --surface: #FFFFFF;
+            --surface-hover: #F9FAFB;
+            --border: #E5E7EB;
+            --border-focus: #326AFD;
+            --danger: #EF4444;
+            --danger-light: #FEF2F2;
+            --danger-mid: #FECACA;
+            --success: #10B981;
+            --success-light: #ECFDF5;
+            --warning: #F59E0B;
+            --warning-light: #FFFBEB;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+            --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
         }
 
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        *, *::before, *::after { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            font-size: 15px;
-        }
-
-        /* --- Header --- */
-        header {
-            background-color: var(--white);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .brand { display: flex; align-items: center; gap: 12px; }
-        .brand img { height: 36px; width: auto; }
-        .brand h1 { font-size: 22px; font-weight: 700; color: var(--primary-blue); margin: 0; letter-spacing: 0.5px; }
-
-        /* --- Layout --- */
-        .container { max-width: 1400px; margin: 30px auto; padding: 0 5%; }
-
-        /* Controls Bar (Updated for Filters) */
-        .controls-bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-            gap: 15px;
-            flex-wrap: wrap;
-            background: var(--white);
-            padding: 15px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
-
-        .search-wrapper { flex: 2; position: relative; min-width: 250px; }
-        .search-wrapper span { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); }
-
-        .search-input {
-            width: 100%; padding: 12px 15px 12px 45px;
-            border: 2px solid #EEE; border-radius: 10px;
-            background: #FAFAFA; font-size: 15px; transition: 0.3s;
-        }
-        .search-input:focus { border-color: var(--primary-blue); background: #FFF; }
-
-        /* Filter Dropdowns */
-        .filter-select {
-            flex: 1;
-            min-width: 160px;
-            padding: 12px;
-            border: 2px solid #EEE;
-            border-radius: 10px;
-            background: #FAFAFA;
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
             color: var(--charcoal);
-            cursor: pointer;
-            transition: 0.3s;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
         }
-        .filter-select:hover { border-color: #CCC; }
-        .filter-select:focus { border-color: var(--primary-blue); background: #FFF; }
 
-        /* --- Buttons --- */
+        /* ── LOADING SCREEN ── */
+        #loadingScreen {
+            position: fixed; inset: 0; background: var(--surface);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; gap: 16px;
+        }
+        #loadingScreen .logo-text { font-size: 28px; font-weight: 700; color: var(--blue); letter-spacing: -0.5px; }
+        #loadingScreen .sub { font-size: 13px; color: var(--text-secondary); }
+        .loader-dots { display: flex; gap: 6px; }
+        .loader-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); opacity: 0.3; animation: dot-pulse 1.4s ease-in-out infinite; }
+        .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dot-pulse { 0%,80%,100% { opacity: 0.3; transform: scale(0.9); } 40% { opacity: 1; transform: scale(1.15); } }
+
+        /* ── AUTH MODAL ── */
+        #authScreen {
+            position: fixed; inset: 0; background: linear-gradient(135deg, #EEF3FF 0%, #F7F8FC 60%, #F3EEFF 100%);
+            display: none; align-items: center; justify-content: center;
+            z-index: 8888; padding: 20px;
+        }
+        #authScreen.visible { display: flex; }
+        .auth-card {
+            background: var(--surface); border-radius: var(--radius-xl);
+            padding: 40px 36px; width: 100%; max-width: 420px;
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+        }
+        .auth-card .brand-lockup { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+        .auth-card .brand-lockup .brand-icon {
+            width: 42px; height: 42px; background: var(--blue); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;
+        }
+        .auth-card h2 { font-size: 22px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.3px; }
+        .auth-card p { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
+        .auth-error {
+            display: none; background: var(--danger-light); border: 1px solid var(--danger-mid);
+            border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 16px;
+            font-size: 13px; color: var(--danger); display: none; align-items: center; gap: 8px;
+        }
+        .auth-error.visible { display: flex; }
+
+        /* ── HEADER ── */
+        header {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 0 24px; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 1px 0 var(--border);
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand-icon-sm {
+            width: 32px; height: 32px; background: var(--blue); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;
+        }
+        .brand h1 { font-size: 17px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.2px; }
+        .header-divider { width: 1px; height: 20px; background: var(--border); }
+        .header-subtitle { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+        .header-right { display: flex; align-items: center; gap: 10px; }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+            padding: 20px 24px 0;
+        }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 16px 18px;
+            display: flex; align-items: center; gap: 14px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+        }
+        .stat-card:hover { box-shadow: var(--shadow-md); border-color: var(--blue-mid); }
+        .stat-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+        }
+        .stat-icon.blue { background: var(--blue-light); color: var(--blue); }
+        .stat-icon.green { background: #ECFDF5; color: var(--success); }
+        .stat-icon.purple { background: var(--purple-light); color: var(--purple); }
+        .stat-icon.orange { background: var(--warning-light); color: var(--warning); }
+        .stat-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.5px; font-family: 'DM Mono', monospace; }
+
+        /* ── MAIN CONTENT ── */
+        .container { padding: 20px 24px; }
+
+        /* ── CONTROLS BAR ── */
+        .controls-bar {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
+            background: var(--surface); padding: 12px; border-radius: var(--radius-lg);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+        }
+        .search-wrapper { flex: 2; position: relative; min-width: 220px; }
+        .search-wrapper .material-icons-round {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            font-size: 18px; color: var(--text-tertiary); pointer-events: none;
+        }
+        .search-input {
+            width: 100%; padding: 9px 12px 9px 38px;
+            border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+            background: var(--bg); font-size: 13.5px; font-family: 'DM Sans', sans-serif;
+            color: var(--charcoal); transition: var(--transition);
+        }
+        .search-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(50,106,253,0.1); }
+        .search-input::placeholder { color: var(--text-tertiary); }
+
+        .result-count-badge {
+            font-size: 11px; font-weight: 600; color: var(--blue); background: var(--blue-light);
+            padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+        }
+
+        .filter-select {
+            flex: 1; min-width: 140px; padding: 9px 32px 9px 12px;
+            border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+            background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 12px center;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            font-size: 13.5px; font-family: 'DM Sans', sans-serif; color: var(--charcoal);
+            cursor: pointer; transition: var(--transition);
+        }
+        .filter-select:hover { border-color: #D1D5DB; }
+        .filter-select:focus { border-color: var(--blue); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(50,106,253,0.1); }
+
+        /* ── BUTTONS ── */
         .btn {
-            padding: 12px 20px; border-radius: 10px; border: none;
-            font-weight: 600; font-size: 14px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center;
-            gap: 8px; transition: 0.2s; white-space: nowrap;
+            padding: 9px 16px; border-radius: var(--radius-sm); border: none;
+            font-weight: 600; font-size: 13.5px; font-family: 'DM Sans', sans-serif;
+            cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+            gap: 7px; transition: var(--transition); white-space: nowrap; position: relative;
+            overflow: hidden;
         }
-        .btn:hover { transform: translateY(-2px); opacity: 0.95; }
-        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .btn .material-icons-round { font-size: 17px; }
 
-        .btn-primary { background-color: var(--primary-blue); color: white; box-shadow: 0 4px 12px rgba(50, 106, 253, 0.25); }
-        .btn-success { background-color: var(--accent-green); color: var(--charcoal); box-shadow: 0 4px 12px rgba(209, 252, 87, 0.3); }
-        .btn-refresh { background-color: var(--bg-color); color: var(--text-dark); border: 1px solid #ddd; }
+        .btn-primary { background: var(--blue); color: white; box-shadow: 0 2px 8px rgba(50,106,253,0.25); }
+        .btn-primary:hover:not(:disabled) { background: #2459E0; box-shadow: 0 4px 14px rgba(50,106,253,0.35); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
 
-        /* Icon Buttons for Lists */
-        .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-        .btn-edit-icon { background: #EEF2FF; color: var(--primary-blue); } .btn-edit-icon:hover { background: var(--primary-blue); color: white; transform: scale(1.05); }
-        .btn-delete-icon { background: #FFF0F0; color: var(--danger); margin-left: 0; } .btn-delete-icon:hover { background: var(--danger); color: white; transform: scale(1.05); }
+        .btn-success { background: var(--green); color: var(--charcoal); box-shadow: 0 2px 8px rgba(209,252,87,0.3); }
+        .btn-success:hover:not(:disabled) { background: #BEF037; transform: translateY(-1px); }
 
-        /* --- Cards --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
-        .card { background: var(--white); border-radius: 16px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid transparent; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-color: rgba(50, 106, 253, 0.1); }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 10px; }
-        .uni-name { font-size: 17px; font-weight: 700; color: var(--charcoal); margin: 0; line-height: 1.3; }
-        .badge { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; }
-        .badge-private { background: #FDE8E8; color: #D63031; } .badge-public { background: #E8F6EF; color: #27AE60; }
-        .uni-meta { font-size: 13px; color: var(--text-light); margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; }
-        .uni-meta div { display: flex; align-items: center; gap: 8px; }
-        .uni-meta .icon { font-size: 16px; color: var(--primary-blue); }
-        .card-actions { margin-top: auto; display: flex; gap: 8px; padding-top: 15px; border-top: 1px solid #f0f0f0; }
-        .btn-card { flex: 1; padding: 8px; font-size: 12px; border-radius: 8px; }
-        .btn-purple { background-color: var(--accent-purple); color: white; }
-        .btn-edit { background-color: #F0F2F5; color: var(--charcoal); }
-        .btn-delete { background-color: #FFF0F0; color: var(--danger); }
+        .btn-ghost { background: transparent; color: var(--charcoal-mid); border: 1.5px solid var(--border); }
+        .btn-ghost:hover:not(:disabled) { background: var(--surface-hover); border-color: #D1D5DB; }
 
-        /* --- Modals & Forms --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 30, 36, 0.7); backdrop-filter: blur(3px); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
-        .modal { background: var(--white); width: 100%; max-width: 550px; border-radius: 16px; padding: 25px; transform: translateY(20px); transition: transform 0.3s; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        .modal-lg { max-width: 800px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
-        .modal-title { font-size: 20px; font-weight: 700; color: var(--charcoal); margin: 0; }
-        .close-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0; margin-left: 10px; }
-        .modal-body { overflow-y: auto; padding-right: 5px; flex: 1; }
+        .btn-danger { background: var(--danger-light); color: var(--danger); border: 1.5px solid var(--danger-mid); }
+        .btn-danger:hover:not(:disabled) { background: var(--danger); color: white; }
 
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control { width: 100%; padding: 12px; border: 2px solid #EEE; border-radius: 8px; font-family: 'Roboto', sans-serif; font-size: 14px; background: #FAFAFA; transition: 0.3s; }
-        .form-control:focus { border-color: var(--primary-blue); background: #FFF; }
-        .row-group { display: flex; gap: 15px; }
+        .btn-icon-sm {
+            width: 34px; height: 34px; padding: 0; border-radius: var(--radius-sm);
+            border: none; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition); background: transparent;
+        }
+        .btn-icon-sm .material-icons-round { font-size: 17px; }
+        .btn-icon-sm.edit { color: var(--blue); background: var(--blue-light); }
+        .btn-icon-sm.edit:hover { background: var(--blue); color: white; }
+        .btn-icon-sm.delete { color: var(--danger); background: var(--danger-light); }
+        .btn-icon-sm.delete:hover { background: var(--danger); color: white; }
+        .btn-icon-sm.manage { color: #7C3AED; background: var(--purple-light); }
+        .btn-icon-sm.manage:hover { background: #7C3AED; color: white; }
 
-        /* Program List */
-        .program-edit-box { background: #F4F6F9; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #EAEAEA; }
-        .programs-list { display: flex; flex-direction: column; gap: 12px; }
-        .program-item { background: #FFF; border: 1px solid #EEE; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: all 0.2s ease; }
-        .program-item:hover { border-color: var(--primary-blue); box-shadow: 0 4px 15px rgba(0,0,0,0.05); transform: translateY(-2px); }
+        /* ── CARD GRID ── */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+        .card {
+            background: var(--surface); border-radius: var(--radius-lg); padding: 18px;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+            transition: var(--transition); display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--blue-mid); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+
+        .card-identity { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+        .card-logo {
+            width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+            background: var(--bg); border: 1px solid var(--border);
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: var(--text-tertiary);
+        }
+        .card-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+        .card-logo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+
+        .card-name-wrap { flex: 1; min-width: 0; }
+        .uni-name { font-size: 15px; font-weight: 700; color: var(--charcoal); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .uni-location { font-size: 12px; color: var(--text-secondary); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+        .uni-location .material-icons-round { font-size: 13px; color: var(--blue); }
+
+        .badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+        .badge-public { background: #DCFCE7; color: #166534; }
+        .badge-private { background: #FEE2E2; color: #991B1B; }
+
+        .card-stats { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 12px; }
+        .card-stat { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); }
+        .card-stat .material-icons-round { font-size: 15px; color: var(--blue); }
+        .card-stat strong { color: var(--charcoal); font-weight: 600; }
+
+        .card-actions { margin-top: auto; display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+        .card-actions .spacer { flex: 1; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 60px 20px; text-align: center; gap: 12px;
+        }
+        .empty-icon { width: 64px; height: 64px; background: var(--blue-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 32px; margin-bottom: 4px; }
+        .empty-state h3 { font-size: 17px; font-weight: 700; color: var(--charcoal); }
+        .empty-state p { font-size: 13.5px; color: var(--text-secondary); max-width: 320px; }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(17,24,39,0.55);
+            backdrop-filter: blur(4px); z-index: 1000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; transition: opacity 0.2s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal {
+            background: var(--surface); width: 100%; max-width: 520px;
+            border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);
+            display: flex; flex-direction: column; max-height: 90vh;
+            transform: translateY(12px) scale(0.98); transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.18s ease;
+            opacity: 0; border: 1px solid var(--border);
+        }
+        .modal-overlay.active .modal { transform: translateY(0) scale(1); opacity: 1; }
+        .modal-lg { max-width: 700px; }
+        .modal-sm { max-width: 400px; }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 22px 24px 18px; border-bottom: 1px solid var(--border);
+        }
+        .modal-title { font-size: 18px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.2px; }
+        .modal-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .modal-close {
+            width: 32px; height: 32px; border-radius: var(--radius-sm); border: none;
+            background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); transition: var(--transition); flex-shrink: 0; margin-top: -2px;
+        }
+        .modal-close:hover { background: var(--border); color: var(--charcoal); }
+        .modal-close .material-icons-round { font-size: 19px; }
+
+        .modal-body { overflow-y: auto; padding: 20px 24px; flex: 1; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ── FORM ── */
+        .form-group { margin-bottom: 16px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-label {
+            display: block; font-size: 11.5px; font-weight: 600;
+            color: var(--charcoal-mid); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .form-label span.req { color: var(--danger); margin-left: 2px; }
+        .form-control {
+            width: 100%; padding: 9px 12px; border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); background: var(--bg);
+            font-size: 13.5px; font-family: 'DM Sans', sans-serif; color: var(--charcoal);
+            transition: var(--transition);
+        }
+        .form-control:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(50,106,253,0.1); }
+        .form-control.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+        .form-error { font-size: 11.5px; color: var(--danger); margin-top: 5px; display: none; align-items: center; gap: 4px; }
+        .form-error.visible { display: flex; }
+        .form-error .material-icons-round { font-size: 13px; }
+
+        /* Password wrapper */
+        .input-wrap { position: relative; }
+        .input-wrap .form-control { padding-right: 40px; }
+        .input-reveal {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; color: var(--text-tertiary);
+            display: flex; align-items: center; padding: 4px; transition: var(--transition);
+        }
+        .input-reveal:hover { color: var(--charcoal-mid); }
+        .input-reveal .material-icons-round { font-size: 18px; }
+
+        /* Section divider in modal */
+        .form-section-title {
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px;
+            color: var(--text-tertiary); margin-bottom: 14px; margin-top: 8px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .form-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        /* ── TAG PILLS INPUT ── */
+        .tags-input-wrap {
+            min-height: 42px; padding: 6px 10px; border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); background: var(--bg);
+            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+            cursor: text; transition: var(--transition);
+        }
+        .tags-input-wrap:focus-within { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(50,106,253,0.1); }
+        .tag-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: var(--green); color: var(--charcoal);
+            padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
+        .tag-pill .remove-tag {
+            background: none; border: none; cursor: pointer; color: var(--charcoal);
+            display: flex; align-items: center; padding: 0; opacity: 0.6;
+            transition: opacity 0.12s;
+        }
+        .tag-pill .remove-tag:hover { opacity: 1; }
+        .tag-pill .remove-tag .material-icons-round { font-size: 13px; }
+        .tags-text-input {
+            border: none; background: transparent; outline: none;
+            font-size: 13px; font-family: 'DM Sans', sans-serif; min-width: 120px; flex: 1;
+            color: var(--charcoal); padding: 2px 2px;
+        }
+        .tags-hint { font-size: 11px; color: var(--text-tertiary); margin-top: 5px; }
+
+        /* ── PROGRAMS PANEL ── */
+        .programs-edit-box {
+            background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+            padding: 18px; margin-bottom: 20px;
+        }
+        .programs-edit-box h4 { font-size: 13px; font-weight: 700; color: var(--charcoal); margin-bottom: 14px; }
+
+        .programs-list-wrap h4 { font-size: 13px; font-weight: 700; color: var(--charcoal); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .prog-count-badge {
+            font-size: 11px; font-weight: 700; color: var(--blue); background: var(--blue-light);
+            padding: 2px 8px; border-radius: 20px;
+        }
+
+        .programs-list { display: flex; flex-direction: column; gap: 10px; }
+        .program-item {
+            background: var(--surface); border: 1px solid var(--border); padding: 14px 16px;
+            border-radius: var(--radius-md); display: flex; align-items: center; gap: 14px;
+            transition: var(--transition);
+        }
+        .program-item:hover { border-color: var(--blue-mid); box-shadow: var(--shadow-sm); }
         .program-info { flex: 1; min-width: 0; }
-        .program-info h4 { margin: 0 0 6px 0; font-size: 16px; font-weight: 600; color: var(--primary-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .program-info p { margin: 0; font-size: 13px; color: var(--text-light); line-height: 1.5; }
-        .prog-actions { display: flex; flex-direction: row; gap: 10px; flex-shrink: 0; align-items: center; }
-        .tag-pill { display: inline-block; background: var(--accent-green); color: var(--charcoal); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-right: 4px; margin-top: 6px; }
+        .program-info h4 { font-size: 14px; font-weight: 600; color: var(--blue); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .program-info p { font-size: 12px; color: var(--text-secondary); }
+        .program-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+        .program-tags .t { background: var(--blue-light); color: var(--blue); font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 10px; }
+        .prog-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-        /* Loading */
-        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #EEE; border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .hidden { display: none !important; } .show { display: flex !important; opacity: 1 !important; } .show .modal { transform: translateY(0) !important; }
-        @media (max-width: 768px) { .row-group { flex-direction: column; gap: 0; } .prog-grid-row { display: flex; flex-direction: column; gap: 0; } .program-item { flex-direction: column; align-items: flex-start; } .prog-actions { width: 100%; display: flex; justify-content: flex-end; margin-top: 10px; } .controls-bar { flex-direction: column; align-items: stretch; } }
+        /* ── CONFIRM DIALOG ── */
+        #confirmDialog { z-index: 2000; }
+        #confirmDialog .modal { max-width: 380px; }
+        .confirm-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 14px; }
+        .confirm-icon.danger { background: var(--danger-light); color: var(--danger); }
+        .confirm-body { text-align: center; padding: 24px 20px 8px; }
+        .confirm-body h3 { font-size: 17px; font-weight: 700; color: var(--charcoal); margin-bottom: 8px; }
+        .confirm-body p { font-size: 13.5px; color: var(--text-secondary); }
+
+        /* ── TOAST NOTIFICATIONS ── */
+        #toastContainer {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9000;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .toast {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 18px; border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg); border: 1px solid transparent;
+            font-size: 13.5px; font-weight: 500; min-width: 280px; max-width: 380px;
+            pointer-events: all; animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            background: var(--surface); color: var(--charcoal);
+        }
+        .toast.success { border-color: #A7F3D0; background: var(--success-light); }
+        .toast.error { border-color: var(--danger-mid); background: var(--danger-light); }
+        .toast.info { border-color: var(--blue-mid); background: var(--blue-light); }
+        .toast .toast-icon { font-size: 20px; flex-shrink: 0; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.info .toast-icon { color: var(--blue); }
+        .toast-text { flex: 1; line-height: 1.4; }
+        .toast.out { animation: toast-out 0.25s ease forwards; }
+        @keyframes toast-in { from { opacity: 0; transform: translateX(20px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateX(20px) scale(0.95); } }
+
+        /* ── MISC UTILITIES ── */
+        .hidden { display: none !important; }
+        .btn-loading::after { content: ''; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; margin-left: 4px; }
+        .btn-loading.btn-ghost::after { border-color: rgba(0,0,0,0.2); border-top-color: var(--charcoal); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .website-link { font-size: 11.5px; color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 3px; opacity: 0.8; }
+        .website-link:hover { opacity: 1; }
+        .website-link .material-icons-round { font-size: 12px; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .stats-bar { grid-template-columns: 1fr 1fr; padding: 14px 14px 0; gap: 10px; }
+            .container { padding: 14px; }
+            .controls-bar { flex-direction: column; align-items: stretch; }
+            .header { padding: 0 14px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+            .stat-value { font-size: 20px; }
+            #toastContainer { bottom: 16px; right: 12px; left: 12px; }
+            .toast { min-width: unset; }
+        }
     </style>
 </head>
 <body>
 
-<div id="loadingOverlay">
-    <div class="spinner"></div>
-    <div style="font-weight: 500; color: var(--primary-blue);">Connecting to Dakhla Cloud...</div>
+<!-- ── LOADING SCREEN ── -->
+<div id="loadingScreen">
+    <div class="logo-text">DAKHLA</div>
+    <div class="sub">Connecting to cloud…</div>
+    <div class="loader-dots"><span></span><span></span><span></span></div>
 </div>
 
-<div id="authModal" class="modal-overlay show" style="z-index: 3000;">
-    <div class="modal" style="max-width: 400px; text-align: center;">
-        <h2 style="margin-top:0; color:var(--primary-blue);">🔐 Admin Access</h2>
-        <p style="color:var(--text-light); margin-bottom: 20px;">Enter your Render API Key to manage data.</p>
+<!-- ── AUTH SCREEN ── -->
+<div id="authScreen">
+    <div class="auth-card">
+        <div class="brand-lockup">
+            <div class="brand-icon"><span class="material-icons-round">school</span></div>
+            <div>
+                <div style="font-size:18px;font-weight:700;color:var(--charcoal);letter-spacing:-0.3px">DAKHLA</div>
+                <div style="font-size:11px;color:var(--text-secondary);font-weight:500">Admin Dashboard</div>
+            </div>
+        </div>
+        <div id="authError" class="auth-error">
+            <span class="material-icons-round" style="font-size:18px">error_outline</span>
+            <span id="authErrorText">Invalid API key. Please try again.</span>
+        </div>
         <div class="form-group">
-            <input type="password" id="apiKeyInput" class="form-control" placeholder="Enter API Key...">
+            <label class="form-label">API KEY<span class="req">*</span></label>
+            <div class="input-wrap">
+                <input type="password" id="apiKeyInput" class="form-control" placeholder="Enter your admin API key…" onkeydown="if(event.key==='Enter')saveApiKey()">
+                <button class="input-reveal" onclick="togglePasswordVisibility()" id="revealBtn">
+                    <span class="material-icons-round" id="revealIcon">visibility</span>
+                </button>
+            </div>
         </div>
-        <button class="btn btn-primary" style="width:100%;" onclick="saveApiKey()">Login</button>
+        <button class="btn btn-primary" style="width:100%;padding:11px 16px;font-size:14px;" onclick="saveApiKey()" id="loginBtn">
+            <span class="material-icons-round">lock_open</span>
+            Sign In to Dashboard
+        </button>
     </div>
 </div>
 
-<header>
-    <div class="brand">
-        <img src="logo.png" alt="Dakhla Logo" onerror="this.style.display='none'">
-        <h1>| DASHBOARD</h1>
-    </div>
-    <div style="display: flex; gap: 10px;">
-        <button class="btn btn-edit" onclick="logout()" title="Logout">
-            <span class="material-icons-round">logout</span>
-        </button>
-        <button class="btn btn-primary" onclick="openUniversityModal()">
-            <span class="material-icons-round">add_circle</span> Add University
-        </button>
-    </div>
-</header>
+<!-- ── MAIN APP ── -->
+<div id="app" class="hidden">
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <div class="brand">
+                <div class="brand-icon-sm"><span class="material-icons-round" style="font-size:17px">school</span></div>
+                <h1>DAKHLA</h1>
+            </div>
+            <div class="header-divider"></div>
+            <div class="header-subtitle">Admin Panel</div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="openUniversityModal()" style="padding:8px 14px;font-size:13px">
+                <span class="material-icons-round">add</span> Add University
+            </button>
+            <button class="btn btn-ghost" onclick="logout()" style="padding:8px 12px;font-size:13px">
+                <span class="material-icons-round">logout</span>
+            </button>
+        </div>
+    </header>
 
-<div class="container">
-    <div class="controls-bar">
-        <div class="search-wrapper">
-            <span class="material-icons-round">search</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search by name..." onkeyup="applyFilters()">
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-icon blue"><span class="material-icons-round">account_balance</span></div>
+            <div>
+                <div class="stat-label">Universities</div>
+                <div class="stat-value" id="statTotal">—</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><span class="material-icons-round">menu_book</span></div>
+            <div>
+                <div class="stat-label">Programs</div>
+                <div class="stat-value" id="statPrograms">—</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon purple"><span class="material-icons-round">business</span></div>
+            <div>
+                <div class="stat-label">Private</div>
+                <div class="stat-value" id="statPrivate">—</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange"><span class="material-icons-round">location_city</span></div>
+            <div>
+                <div class="stat-label">Public</div>
+                <div class="stat-value" id="statPublic">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Controls Bar -->
+        <div class="controls-bar">
+            <div class="search-wrapper">
+                <span class="material-icons-round">search</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search universities or locations…" oninput="applyFilters()">
+            </div>
+            <span id="resultCountBadge" class="result-count-badge hidden"></span>
+            <select id="sectorFilter" class="filter-select" onchange="applyFilters()">
+                <option value="">All Sectors</option>
+                <option value="Public">Public</option>
+                <option value="Private">Private</option>
+            </select>
+            <select id="locationFilter" class="filter-select" onchange="applyFilters()">
+                <option value="">All Locations</option>
+            </select>
+            <select id="sortOrder" class="filter-select" onchange="applyFilters()">
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+                <option value="progs">Most Programs</option>
+            </select>
+            <button class="btn btn-ghost" onclick="fetchData()" id="refreshBtn" style="padding:8px 12px">
+                <span class="material-icons-round">sync</span>
+            </button>
         </div>
 
-        <select id="sectorFilter" class="filter-select" onchange="applyFilters()">
-            <option value="">All Sectors</option>
-            <option value="Public">Public</option>
-            <option value="Private">Private</option>
-        </select>
-
-        <select id="locationFilter" class="filter-select" onchange="applyFilters()">
-            <option value="">All Locations</option>
-        </select>
-
-        <select id="sortOrder" class="filter-select" onchange="applyFilters()">
-            <option value="az">Sort: A-Z</option>
-            <option value="za">Sort: Z-A</option>
-            <option value="progs">Sort: Most Programs</option>
-        </select>
-
-        <button class="btn btn-refresh" onclick="fetchData()">
-            <span class="material-icons-round">sync</span>
-        </button>
+        <!-- Grid -->
+        <div id="universityGrid" class="grid"></div>
     </div>
-
-    <div id="universityGrid" class="grid"></div>
 </div>
 
-<div id="universityModal" class="modal-overlay">
+<!-- ── UNIVERSITY MODAL ── -->
+<div id="universityModal" class="modal-overlay" onclick="handleOverlayClick(event, 'universityModal')">
     <div class="modal">
         <div class="modal-header">
-            <h3 class="modal-title" id="uniModalTitle">Add University</h3>
-            <button class="close-btn" onclick="closeModal('universityModal')">&times;</button>
+            <div>
+                <div class="modal-title" id="uniModalTitle">Add University</div>
+                <div class="modal-subtitle">Fill in the details for this institution</div>
+            </div>
+            <button class="modal-close" onclick="closeModal('universityModal')">
+                <span class="material-icons-round">close</span>
+            </button>
         </div>
         <div class="modal-body">
             <input type="hidden" id="uniId">
+            <div class="form-section-title">Basic Info</div>
             <div class="form-group">
-                <label class="form-label">University Name</label>
-                <input type="text" id="uniName" class="form-control" placeholder="e.g. LUMS">
+                <label class="form-label">University Name<span class="req">*</span></label>
+                <input type="text" id="uniName" class="form-control" placeholder="e.g. Lahore University of Management Sciences">
+                <div class="form-error" id="uniNameError"><span class="material-icons-round">info</span> Name is required</div>
             </div>
-            <div class="row-group">
-                <div class="form-group" style="flex:1;">
+            <div class="form-row">
+                <div class="form-group">
                     <label class="form-label">Location</label>
-                    <input type="text" id="uniLocation" class="form-control" placeholder="e.g. Lahore">
+                    <input type="text" id="uniLocation" class="form-control" placeholder="e.g. Lahore, Punjab">
                 </div>
-                <div class="form-group" style="flex:1;">
-                    <label class="form-label">Full Address</label>
-                    <input type="text" id="uniAddress" class="form-control" placeholder="Detailed Address...">
-                </div>
-            </div>
-            <div class="row-group">
-                <div class="form-group" style="flex:1;">
+                <div class="form-group">
                     <label class="form-label">Sector</label>
                     <select id="uniSector" class="form-control">
                         <option value="Public">Public</option>
                         <option value="Private">Private</option>
                     </select>
                 </div>
-                <div class="form-group" style="flex:1;">
-                    <label class="form-label">Website URL</label>
-                    <input type="text" id="uniWebsite" class="form-control" placeholder="https://...">
-                </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Logo Image URL</label>
-                <input type="text" id="uniLogo" class="form-control" placeholder="https://example.com/logo.png">
+                <label class="form-label">Full Address</label>
+                <input type="text" id="uniAddress" class="form-control" placeholder="Street, Area, City, Pakistan">
             </div>
-            <div class="row-group">
-                <div class="form-group" style="flex:1;">
+            <div class="form-section-title">Online Presence</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Website URL</label>
+                    <input type="text" id="uniWebsite" class="form-control" placeholder="https://…">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Logo URL</label>
+                    <input type="text" id="uniLogo" class="form-control" placeholder="https://…/logo.png">
+                </div>
+            </div>
+            <div class="form-section-title">Contact</div>
+            <div class="form-row">
+                <div class="form-group">
                     <label class="form-label">Phone</label>
-                    <input type="text" id="uniPhone" class="form-control" placeholder="+92...">
+                    <input type="text" id="uniPhone" class="form-control" placeholder="+92 …">
                 </div>
-                <div class="form-group" style="flex:1;">
+                <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="text" id="uniEmail" class="form-control" placeholder="info@...">
+                    <input type="text" id="uniEmail" class="form-control" placeholder="info@…">
                 </div>
-            </div>
-            <div style="margin-top: 20px;">
-                <button class="btn btn-primary" style="width: 100%;" onclick="saveUniversity()">Save University Details</button>
             </div>
         </div>
-    </div>
-</div>
-
-<div id="programsModal" class="modal-overlay">
-    <div class="modal modal-lg">
-        <div class="modal-header">
-            <div>
-                <h3 class="modal-title">Manage Programs</h3>
-                <div style="font-size: 13px; color: var(--text-light); margin-top: 4px;">
-                    For: <span id="currentUniName" style="color: var(--primary-blue); font-weight: 600;"></span>
-                </div>
-            </div>
-            <button class="close-btn" onclick="closeModal('programsModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="program-edit-box">
-                <h4 style="margin: 0 0 15px 0; color: var(--charcoal); font-size: 15px;">Add / Edit Program</h4>
-                <input type="hidden" id="progIndex">
-                <div class="row-group prog-grid-row">
-                    <div class="form-group" style="flex: 2;">
-                        <label class="form-label">Program Name</label>
-                        <input type="text" id="progName" class="form-control" placeholder="e.g. BS Computer Science">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Min %</label>
-                        <input type="number" id="progMerit" class="form-control" placeholder="60">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Duration</label>
-                        <input type="text" id="progDuration" class="form-control" placeholder="4 years">
-                    </div>
-                </div>
-                <div class="row-group prog-grid-row">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Deadline</label>
-                        <input type="text" id="progDeadline" class="form-control" placeholder="YYYY-MM-DD">
-                    </div>
-                    <div class="form-group" style="flex: 2;">
-                        <label class="form-label">Stream Tags</label>
-                        <input type="text" id="progTags" class="form-control" placeholder="IT, Engineering, Medical">
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 5px;">
-                    <button class="btn btn-success" style="flex:1;" onclick="pushProgramToLocal()">
-                        <span class="material-icons-round">add_circle</span> Add to List
-                    </button>
-                    <button class="btn btn-edit" onclick="clearProgramForm()">Clear</button>
-                </div>
-            </div>
-            <h4 style="color: var(--charcoal); margin-bottom: 15px; font-size: 15px;">
-                Current Programs <span id="progCount" style="color: var(--text-light); font-weight: normal;">(0)</span>
-            </h4>
-            <div id="programsListContainer" class="programs-list"></div>
-        </div>
-        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #EEE;">
-            <button class="btn btn-primary" style="width: 100%;" onclick="commitProgramsToBackend()">
-                <span class="material-icons-round">cloud_upload</span> Save All Changes to Cloud
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('universityModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="saveUniversity()" id="saveUniBtn">
+                <span class="material-icons-round">save</span> Save University
             </button>
         </div>
     </div>
 </div>
 
+<!-- ── PROGRAMS MODAL ── -->
+<div id="programsModal" class="modal-overlay" onclick="handleOverlayClick(event, 'programsModal')">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title">Manage Programs</div>
+                <div class="modal-subtitle" id="currentUniName">—</div>
+            </div>
+            <button class="modal-close" onclick="closeModal('programsModal')">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Add / Edit Form -->
+            <div class="programs-edit-box">
+                <h4 id="progFormTitle">Add New Program</h4>
+                <input type="hidden" id="progIndex">
+                <div class="form-group">
+                    <label class="form-label">Program Name<span class="req">*</span></label>
+                    <input type="text" id="progName" class="form-control" placeholder="e.g. BS Computer Science">
+                    <div class="form-error" id="progNameError"><span class="material-icons-round">info</span> Name is required</div>
+                </div>
+                <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
+                    <div class="form-group">
+                        <label class="form-label">Min % Required</label>
+                        <input type="number" id="progMerit" class="form-control" placeholder="e.g. 65" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        <input type="text" id="progDuration" class="form-control" placeholder="4 years">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="text" id="progDeadline" class="form-control" placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stream Tags</label>
+                    <div class="tags-input-wrap" id="tagsWrap" onclick="focusTagInput()">
+                        <input type="text" id="progTagsInput" class="tags-text-input" placeholder="Type tag, press Enter or comma…"
+                               onkeydown="handleTagInput(event)" oninput="handleTagInputChange(event)">
+                    </div>
+                    <input type="hidden" id="progTagsHidden">
+                    <div class="tags-hint">Press Enter or comma to add a tag. Click × to remove.</div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:4px">
+                    <button class="btn btn-success" onclick="pushProgramToLocal()" style="flex:1">
+                        <span class="material-icons-round">add_circle</span>
+                        <span id="progSubmitLabel">Add to List</span>
+                    </button>
+                    <button class="btn btn-ghost" onclick="clearProgramForm()">
+                        <span class="material-icons-round">refresh</span> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Programs List -->
+            <div class="programs-list-wrap">
+                <h4>
+                    Current Programs
+                    <span class="prog-count-badge" id="progCount">0</span>
+                </h4>
+                <div id="programsListContainer" class="programs-list"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('programsModal')">Close without saving</button>
+            <button class="btn btn-primary" onclick="commitProgramsToBackend()" id="saveProgBtn">
+                <span class="material-icons-round">cloud_upload</span> Save All Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── CONFIRM DIALOG ── -->
+<div id="confirmDialog" class="modal-overlay">
+    <div class="modal modal-sm">
+        <div class="confirm-body">
+            <div class="confirm-icon danger"><span class="material-icons-round">delete_outline</span></div>
+            <h3 id="confirmTitle">Delete University?</h3>
+            <p id="confirmMessage">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer" style="justify-content:center;gap:12px;padding-top:20px">
+            <button class="btn btn-ghost" style="min-width:100px" onclick="dismissConfirm()">Cancel</button>
+            <button class="btn btn-danger" style="min-width:100px" id="confirmYesBtn">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── TOAST CONTAINER ── -->
+<div id="toastContainer"></div>
+
 <script>
-    // 🚨 CONFIG: Replace with your Render URL
+    /* ─────────────────────────────────────────────
+       CONFIG
+    ───────────────────────────────────────────── */
     const API_BASE = "https://dakhla-unity-api.onrender.com/api/universities";
 
     let allUniversities = [];
     let currentUniForPrograms = null;
     let ADMIN_KEY = localStorage.getItem("dakhla_api_key");
+    let _confirmResolve = null;
+    let currentTagsList = [];
 
-    // --- Init ---
+    /* ─────────────────────────────────────────────
+       INIT
+    ───────────────────────────────────────────── */
     window.onload = () => {
-        if(ADMIN_KEY) {
-            document.getElementById('authModal').classList.remove('show');
+        if (ADMIN_KEY) {
+            showApp();
             fetchData();
         } else {
-            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('authScreen').classList.add('visible');
         }
     };
 
+    function showApp() {
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('authScreen').classList.remove('visible');
+        document.getElementById('app').classList.remove('hidden');
+    }
+
+    /* ─────────────────────────────────────────────
+       AUTH
+    ───────────────────────────────────────────── */
     function saveApiKey() {
-        const input = document.getElementById('apiKeyInput').value;
-        if(!input) return alert("Please enter key");
-        localStorage.setItem("dakhla_api_key", input);
-        ADMIN_KEY = input;
-        document.getElementById('authModal').classList.remove('show');
-        fetchData();
+        const input = document.getElementById('apiKeyInput');
+        const key = input.value.trim();
+        const errEl = document.getElementById('authError');
+        const btn = document.getElementById('loginBtn');
+
+        errEl.classList.remove('visible');
+
+        if (!key) {
+            document.getElementById('authErrorText').textContent = 'Please enter an API key.';
+            errEl.classList.add('visible');
+            input.focus();
+            return;
+        }
+
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+
+        // Test key with a quick fetch
+        fetch(API_BASE, { headers: { 'x-api-key': key } })
+            .then(res => {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                if (res.status === 403) {
+                    document.getElementById('authErrorText').textContent = 'Invalid API key. Please check and try again.';
+                    errEl.classList.add('visible');
+                    input.focus();
+                } else {
+                    localStorage.setItem("dakhla_api_key", key);
+                    ADMIN_KEY = key;
+                    showApp();
+                    fetchData();
+                }
+            })
+            .catch(() => {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                document.getElementById('authErrorText').textContent = 'Network error. Check your connection.';
+                errEl.classList.add('visible');
+            });
     }
 
     function logout() {
         localStorage.removeItem("dakhla_api_key");
-        location.reload();
+        toast('Signed out successfully.', 'info');
+        setTimeout(() => location.reload(), 600);
     }
 
+    function togglePasswordVisibility() {
+        const input = document.getElementById('apiKeyInput');
+        const icon = document.getElementById('revealIcon');
+        if (input.type === 'password') { input.type = 'text'; icon.textContent = 'visibility_off'; }
+        else { input.type = 'password'; icon.textContent = 'visibility'; }
+    }
+
+    /* ─────────────────────────────────────────────
+       DATA FETCH
+    ───────────────────────────────────────────── */
     async function fetchData() {
-        document.getElementById('loadingOverlay').classList.remove('hidden');
+        const btn = document.getElementById('refreshBtn');
+        if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; }
+
         try {
             const res = await fetch(API_BASE);
             if (!res.ok) throw new Error("Fetch failed");
             allUniversities = await res.json();
-
-            // Populate Location Dropdown automatically
             populateLocations(allUniversities);
-
-            applyFilters(); // Initial render
+            updateStats(allUniversities);
+            applyFilters();
+            if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; }
         } catch (err) {
-            console.error(err);
-            alert("Error fetching data. Check server.");
+            if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; }
+            toast('Failed to load data. Check your connection.', 'error');
         }
-        document.getElementById('loadingOverlay').classList.add('hidden');
     }
 
-    // --- Dynamic Filter Population ---
+    /* ─────────────────────────────────────────────
+       STATS
+    ───────────────────────────────────────────── */
+    function updateStats(data) {
+        const total = data.length;
+        const totalProgs = data.reduce((s, u) => s + (u.programs ? u.programs.length : 0), 0);
+        const priv = data.filter(u => u.sector === 'Private').length;
+        const pub = data.filter(u => u.sector === 'Public').length;
+
+        animateCount('statTotal', total);
+        animateCount('statPrograms', totalProgs);
+        animateCount('statPrivate', priv);
+        animateCount('statPublic', pub);
+    }
+
+    function animateCount(id, target) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const start = parseInt(el.textContent) || 0;
+        const diff = target - start;
+        const steps = 24;
+        let i = 0;
+        const timer = setInterval(() => {
+            i++;
+            el.textContent = Math.round(start + diff * (i / steps));
+            if (i >= steps) clearInterval(timer);
+        }, 20);
+    }
+
+    /* ─────────────────────────────────────────────
+       FILTERS
+    ───────────────────────────────────────────── */
     function populateLocations(data) {
-        const locSelect = document.getElementById('locationFilter');
-        const uniqueLocs = [...new Set(data.map(u => u.location ? u.location.trim() : "").filter(l => l !== ""))].sort();
-
-        // Keep first option "All Locations"
-        locSelect.innerHTML = '<option value="">All Locations</option>';
-        uniqueLocs.forEach(loc => {
-            locSelect.innerHTML += `<option value="${loc}">${loc}</option>`;
-        });
+        const sel = document.getElementById('locationFilter');
+        const cur = sel.value;
+        const locs = [...new Set(data.map(u => u.location ? u.location.trim() : '').filter(Boolean))].sort();
+        sel.innerHTML = '<option value="">All Locations</option>';
+        locs.forEach(l => sel.innerHTML += `<option value="${l}"${cur===l?' selected':''}>${l}</option>`);
     }
 
-    // --- MAIN FILTER & SORT LOGIC ---
     function applyFilters() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
+        const q = (document.getElementById('searchInput').value || '').toLowerCase();
         const sector = document.getElementById('sectorFilter').value;
         const location = document.getElementById('locationFilter').value;
-        const sortBy = document.getElementById('sortOrder').value;
+        const sort = document.getElementById('sortOrder').value;
 
-        // 1. Filter
-        let filtered = allUniversities.filter(u => {
-            const matchesSearch = u.name.toLowerCase().includes(query) || (u.location && u.location.toLowerCase().includes(query));
-            const matchesSector = sector === "" || (u.sector && u.sector === sector);
-            const matchesLocation = location === "" || (u.location && u.location.trim() === location);
-            return matchesSearch && matchesSector && matchesLocation;
+        let list = allUniversities.filter(u => {
+            const ms = u.name.toLowerCase().includes(q) || (u.location && u.location.toLowerCase().includes(q));
+            const mSec = !sector || u.sector === sector;
+            const mLoc = !location || (u.location && u.location.trim() === location);
+            return ms && mSec && mLoc;
         });
 
-        // 2. Sort
-        if (sortBy === 'az') {
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortBy === 'za') {
-            filtered.sort((a, b) => b.name.localeCompare(a.name));
-        } else if (sortBy === 'progs') {
-            filtered.sort((a, b) => (b.programs?.length || 0) - (a.programs?.length || 0));
+        if (sort === 'az') list.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sort === 'za') list.sort((a, b) => b.name.localeCompare(a.name));
+        else if (sort === 'progs') list.sort((a, b) => (b.programs?.length || 0) - (a.programs?.length || 0));
+
+        const badge = document.getElementById('resultCountBadge');
+        if (q || sector || location) {
+            badge.textContent = `${list.length} result${list.length !== 1 ? 's' : ''}`;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
         }
 
-        renderGrid(filtered);
+        renderGrid(list);
     }
 
-    // --- Render ---
+    /* ─────────────────────────────────────────────
+       RENDER GRID
+    ───────────────────────────────────────────── */
     function renderGrid(data) {
         const grid = document.getElementById('universityGrid');
-        grid.innerHTML = "";
-        if (data.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-light);">No data found matching filters.</div>`;
+        if (!data.length) {
+            grid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><span class="material-icons-round">search_off</span></div>
+                <h3>No universities found</h3>
+                <p>Try adjusting your search or filters, or add a new university to get started.</p>
+                <button class="btn btn-primary" onclick="openUniversityModal()" style="margin-top:8px">
+                    <span class="material-icons-round">add</span> Add University
+                </button>
+            </div>`;
             return;
         }
-        data.forEach(uni => {
-            const badgeClass = (uni.sector && uni.sector.toLowerCase() === 'public') ? 'badge-public' : 'badge-private';
+
+        grid.innerHTML = data.map(uni => {
+            const badgeCls = (uni.sector || '').toLowerCase() === 'public' ? 'badge-public' : 'badge-private';
             const progCount = uni.programs ? uni.programs.length : 0;
-            const cardHTML = `
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="uni-name">${uni.name}</h3>
-                            <span class="badge ${badgeClass}">${uni.sector || 'Unknown'}</span>
+            const logoHtml = uni.logoUrl
+                ? `<img src="${escapeHtml(uni.logoUrl)}" alt="" onerror="this.parentNode.innerHTML='<span class=material-icons-round style=font-size:22px;color:var(--text-tertiary)>account_balance</span>'">`
+                : `<span class="material-icons-round" style="font-size:22px;color:var(--text-tertiary)">account_balance</span>`;
+            const webLink = uni.websiteUrl ? `<a href="${escapeHtml(uni.websiteUrl)}" target="_blank" class="website-link"><span class="material-icons-round">open_in_new</span>Website</a>` : '';
+
+            return `<div class="card">
+            <div class="card-header">
+                <div class="card-identity">
+                    <div class="card-logo">${logoHtml}</div>
+                    <div class="card-name-wrap">
+                        <div class="uni-name" title="${escapeHtml(uni.name)}">${escapeHtml(uni.name)}</div>
+                        <div class="uni-location">
+                            <span class="material-icons-round">place</span>${escapeHtml(uni.location || '—')}
                         </div>
-                        <div class="uni-meta">
-                            <div><span class="material-icons-round icon">place</span> ${uni.location}</div>
-                            <div><span class="material-icons-round icon">school</span> ${progCount} Programs</div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="btn btn-card btn-purple" onclick='openProgramsModal("${uni.id}")'><span class="material-icons-round" style="font-size:16px;">list</span> Programs</button>
-                            <button class="btn btn-card btn-edit" onclick='openEditUniModal("${uni.id}")'>Edit</button>
-                            <button class="btn btn-card btn-delete" onclick='deleteUniversity("${uni.id}")'>Delete</button>
-                        </div>
-                    </div>`;
-            grid.innerHTML += cardHTML;
-        });
+                    </div>
+                </div>
+                <span class="badge ${badgeCls}">${escapeHtml(uni.sector || 'N/A')}</span>
+            </div>
+            <div class="card-stats">
+                <div class="card-stat"><span class="material-icons-round">menu_book</span><strong>${progCount}</strong> Program${progCount !== 1 ? 's' : ''}</div>
+                ${webLink}
+            </div>
+            <div class="card-actions">
+                <button class="btn-icon-sm manage" title="Manage Programs" onclick='openProgramsModal("${uni.id}")'>
+                    <span class="material-icons-round">list_alt</span>
+                </button>
+                <button class="btn-icon-sm edit" title="Edit University" onclick='openEditUniModal("${uni.id}")'>
+                    <span class="material-icons-round">edit</span>
+                </button>
+                <div class="spacer"></div>
+                <button class="btn-icon-sm delete" title="Delete University" onclick='confirmDelete("${uni.id}", "${escapeHtml(uni.name).replace(/"/g, '&quot;')}")'>
+                    <span class="material-icons-round">delete_outline</span>
+                </button>
+            </div>
+        </div>`;
+        }).join('');
     }
 
-    // --- Helper: Send Request with Key ---
+    /* ─────────────────────────────────────────────
+       HTTP HELPER
+    ───────────────────────────────────────────── */
     async function sendRequest(url, method, body) {
+        const opts = { method, headers: { 'x-api-key': ADMIN_KEY } };
+        if (method !== 'DELETE') { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
         try {
-            const options = { method: method, headers: { "x-api-key": ADMIN_KEY } };
-            if (method !== "DELETE") {
-                options.headers["Content-Type"] = "application/json";
-                options.body = JSON.stringify(body);
-            }
-            const safeUrl = url;
-            const res = await fetch(safeUrl, options);
-            if(res.status === 403) { alert("⛔ Access Denied: Invalid Key."); return false; }
-            if(!res.ok) { const txt = await res.text(); alert(`Server Error: ${txt}`); return false; }
+            const res = await fetch(url, opts);
+            if (res.status === 403) { toast('Access denied. Your API key may have changed.', 'error'); return false; }
+            if (!res.ok) { const t = await res.text(); toast(`Server error: ${t}`, 'error'); return false; }
             return true;
-        } catch(e) { alert("Network Error"); return false; }
+        } catch { toast('Network error. Please check your connection.', 'error'); return false; }
     }
 
-    // --- University CRUD ---
-    function openUniversityModal() { document.getElementById('uniModalTitle').innerText = "Add University"; clearUniForm(); openModal('universityModal'); }
-    function openEditUniModal(id) {
-        const uni = allUniversities.find(u => u.id === id); if (!uni) return;
-        document.getElementById('uniModalTitle').innerText = "Edit University";
-        document.getElementById('uniId').value = uni.id;
-        document.getElementById('uniName').value = uni.name;
-        document.getElementById('uniLocation').value = uni.location;
-        document.getElementById('uniAddress').value = uni.address || "";
-        document.getElementById('uniSector').value = uni.sector;
-        document.getElementById('uniWebsite').value = uni.websiteUrl;
-        document.getElementById('uniPhone').value = uni.contactPhone || "";
-        document.getElementById('uniEmail').value = uni.contactEmail || "";
-        document.getElementById('uniLogo').value = uni.logoUrl || "";
+    /* ─────────────────────────────────────────────
+       UNIVERSITY CRUD
+    ───────────────────────────────────────────── */
+    function openUniversityModal() {
+        document.getElementById('uniModalTitle').textContent = 'Add University';
+        clearUniForm();
         openModal('universityModal');
     }
-    function clearUniForm() {
-        document.getElementById('uniId').value = ""; document.getElementById('uniName').value = "";
-        document.getElementById('uniLocation').value = ""; document.getElementById('uniAddress').value = "";
-        document.getElementById('uniWebsite').value = ""; document.getElementById('uniPhone').value = "";
-        document.getElementById('uniEmail').value = ""; document.getElementById('uniLogo').value = "";
-    }
-    async function saveUniversity() {
-        const id = document.getElementById('uniId').value;
-        const name = document.getElementById('uniName').value;
-        if (!name) { alert("Name required"); return; }
-        const generatedId = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') + "-" + Date.now().toString().slice(-4);
-        const uniObj = {
-            name, location: document.getElementById('uniLocation').value,
-            address: document.getElementById('uniAddress').value,
-            sector: document.getElementById('uniSector').value, websiteUrl: document.getElementById('uniWebsite').value,
-            contactPhone: document.getElementById('uniPhone').value, contactEmail: document.getElementById('uniEmail').value,
-            logoUrl: document.getElementById('uniLogo').value,
-            programs: id ? allUniversities.find(u => u.id === id).programs : [],
-            id: id || generatedId
-        };
-        const success = await sendRequest(id ? `${API_BASE}/${id}` : API_BASE, id ? "PUT" : "POST", uniObj);
-        if (success) { closeModal('universityModal'); fetchData(); }
-    }
-    async function deleteUniversity(id) {
-        if (!confirm("Delete this university?")) return;
-        const success = await sendRequest(`${API_BASE}/${id}`, "DELETE", null);
-        if (success) { alert("Deleted."); fetchData(); }
+
+    function openEditUniModal(id) {
+        const uni = allUniversities.find(u => u.id === id); if (!uni) return;
+        document.getElementById('uniModalTitle').textContent = 'Edit University';
+        document.getElementById('uniId').value = uni.id;
+        document.getElementById('uniName').value = uni.name || '';
+        document.getElementById('uniLocation').value = uni.location || '';
+        document.getElementById('uniAddress').value = uni.address || '';
+        document.getElementById('uniSector').value = uni.sector || 'Public';
+        document.getElementById('uniWebsite').value = uni.websiteUrl || '';
+        document.getElementById('uniPhone').value = uni.contactPhone || '';
+        document.getElementById('uniEmail').value = uni.contactEmail || '';
+        document.getElementById('uniLogo').value = uni.logoUrl || '';
+        openModal('universityModal');
     }
 
-    // --- Programs Logic ---
+    function clearUniForm() {
+        ['uniId','uniName','uniLocation','uniAddress','uniWebsite','uniPhone','uniEmail','uniLogo'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        document.getElementById('uniSector').value = 'Public';
+        document.getElementById('uniNameError').classList.remove('visible');
+        document.getElementById('uniName').classList.remove('error');
+    }
+
+    async function saveUniversity() {
+        const nameEl = document.getElementById('uniName');
+        const name = nameEl.value.trim();
+        if (!name) {
+            nameEl.classList.add('error');
+            document.getElementById('uniNameError').classList.add('visible');
+            nameEl.focus();
+            return;
+        }
+        nameEl.classList.remove('error');
+        document.getElementById('uniNameError').classList.remove('visible');
+
+        const id = document.getElementById('uniId').value;
+        const btn = document.getElementById('saveUniBtn');
+        btn.classList.add('btn-loading'); btn.disabled = true;
+
+        const generatedId = name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') + '-' + Date.now().toString().slice(-4);
+        const uniObj = {
+            id: id || generatedId, name,
+            location: document.getElementById('uniLocation').value,
+            address: document.getElementById('uniAddress').value,
+            sector: document.getElementById('uniSector').value,
+            websiteUrl: document.getElementById('uniWebsite').value,
+            contactPhone: document.getElementById('uniPhone').value,
+            contactEmail: document.getElementById('uniEmail').value,
+            logoUrl: document.getElementById('uniLogo').value,
+            programs: id ? (allUniversities.find(u => u.id === id)?.programs || []) : []
+        };
+
+        const ok = await sendRequest(id ? `${API_BASE}/${id}` : API_BASE, id ? 'PUT' : 'POST', uniObj);
+        btn.classList.remove('btn-loading'); btn.disabled = false;
+        if (ok) {
+            closeModal('universityModal');
+            toast(id ? 'University updated successfully.' : 'University added successfully.', 'success');
+            fetchData();
+        }
+    }
+
+    async function confirmDelete(id, name) {
+        const ok = await showConfirm(`Delete "${name}"?`, 'This will permanently remove this university and all its programs.');
+        if (!ok) return;
+        const success = await sendRequest(`${API_BASE}/${id}`, 'DELETE', null);
+        if (success) { toast(`"${name}" deleted.`, 'success'); fetchData(); }
+    }
+
+    /* ─────────────────────────────────────────────
+       PROGRAMS
+    ───────────────────────────────────────────── */
     function openProgramsModal(uniId) {
         currentUniForPrograms = JSON.parse(JSON.stringify(allUniversities.find(u => u.id === uniId)));
         if (!currentUniForPrograms) return;
-        document.getElementById('currentUniName').innerText = currentUniForPrograms.name;
-        renderProgramsList(); clearProgramForm(); openModal('programsModal');
+        document.getElementById('currentUniName').textContent = currentUniForPrograms.name;
+        renderProgramsList();
+        clearProgramForm();
+        openModal('programsModal');
     }
+
     function renderProgramsList() {
-        const c = document.getElementById('programsListContainer'); c.innerHTML = "";
+        const c = document.getElementById('programsListContainer');
         const list = currentUniForPrograms.programs || [];
-        document.getElementById('progCount').innerText = `(${list.length})`;
-        if (list.length === 0) { c.innerHTML = "<div style='text-align:center; padding:20px; color:#888;'>No programs.</div>"; return; }
-        list.forEach((p, i) => {
-            const tags = p.streamTags ? p.streamTags.map(t => `<span class="tag-pill">${t}</span>`).join('') : '';
-            c.innerHTML += `
-                    <div class="program-item">
-                        <div class="program-info">
-                            <h4>${p.name}</h4>
-                            <p>Min: <b>${p.minRequiredPercentage}%</b> | ${p.duration || ''} | ${p.applicationDeadline || ''}</p>
-                            <div style="margin-top:5px;">${tags}</div>
-                        </div>
-                        <div class="prog-actions">
-                            <button class="btn-icon btn-edit-icon" onclick="loadProgramIntoForm(${i})"><span class="material-icons-round" style="font-size:18px;">edit</span></button>
-                            <button class="btn-icon btn-delete-icon" onclick="removeProgram(${i})"><span class="material-icons-round" style="font-size:18px;">close</span></button>
-                        </div>
-                    </div>`;
-        });
+        document.getElementById('progCount').textContent = list.length;
+
+        if (!list.length) {
+            c.innerHTML = `<div style="text-align:center;padding:28px 20px;color:var(--text-secondary);font-size:13px">
+            <span class="material-icons-round" style="font-size:36px;display:block;margin-bottom:8px;color:var(--text-tertiary)">library_books</span>
+            No programs added yet. Use the form above.
+        </div>`;
+            return;
+        }
+
+        c.innerHTML = list.map((p, i) => {
+            const tags = p.streamTags ? p.streamTags.map(t => `<span class="t">${escapeHtml(t)}</span>`).join('') : '';
+            return `<div class="program-item">
+            <div class="program-info">
+                <h4>${escapeHtml(p.name)}</h4>
+                <p>Min: <strong>${p.minRequiredPercentage}%</strong> · ${p.duration || '—'} · ${p.applicationDeadline || 'No deadline'}</p>
+                ${tags ? `<div class="program-tags">${tags}</div>` : ''}
+            </div>
+            <div class="prog-actions">
+                <button class="btn-icon-sm edit" onclick="loadProgramIntoForm(${i})" title="Edit"><span class="material-icons-round">edit</span></button>
+                <button class="btn-icon-sm delete" onclick="removeProgram(${i})" title="Remove"><span class="material-icons-round">close</span></button>
+            </div>
+        </div>`;
+        }).join('');
     }
+
     function loadProgramIntoForm(i) {
         const p = currentUniForPrograms.programs[i];
         document.getElementById('progIndex').value = i;
         document.getElementById('progName').value = p.name;
         document.getElementById('progMerit').value = p.minRequiredPercentage;
-        document.getElementById('progDuration').value = p.duration;
-        document.getElementById('progDeadline').value = p.applicationDeadline;
-        document.getElementById('progTags').value = p.streamTags ? p.streamTags.join(', ') : "";
-    }
-    function clearProgramForm() {
-        document.getElementById('progIndex').value = "-1";
-        document.getElementById('progName').value = ""; document.getElementById('progMerit').value = "";
-        document.getElementById('progDuration').value = ""; document.getElementById('progDeadline').value = "";
-        document.getElementById('progTags').value = "";
-    }
-    function pushProgramToLocal() {
-        const idx = parseInt(document.getElementById('progIndex').value);
-        const name = document.getElementById('progName').value;
-        if (!name) { alert("Name required"); return; }
-        const p = {
-            programId: idx >= 0 ? currentUniForPrograms.programs[idx].programId : `prog-${Date.now()}`,
-            name, minRequiredPercentage: parseFloat(document.getElementById('progMerit').value) || 0,
-            duration: document.getElementById('progDuration').value, applicationDeadline: document.getElementById('progDeadline').value,
-            streamTags: document.getElementById('progTags').value.split(',').map(t=>t.trim()).filter(t=>t)
-        };
-        if (idx >= 0) currentUniForPrograms.programs[idx] = p;
-        else { if(!currentUniForPrograms.programs) currentUniForPrograms.programs=[]; currentUniForPrograms.programs.push(p); }
-        renderProgramsList(); clearProgramForm();
-    }
-    function removeProgram(i) { if(!confirm("Remove program?")) return; currentUniForPrograms.programs.splice(i, 1); renderProgramsList(); }
-    async function commitProgramsToBackend() {
-        const btn = document.querySelector('#programsModal .btn-primary');
-        const originalText = btn.innerHTML; btn.innerHTML = "Saving...";
-        const success = await sendRequest(`${API_BASE}/${currentUniForPrograms.id}`, "PUT", currentUniForPrograms);
-        btn.innerHTML = originalText;
-        if (success) { closeModal('programsModal'); fetchData(); }
+        document.getElementById('progDuration').value = p.duration || '';
+        document.getElementById('progDeadline').value = p.applicationDeadline || '';
+        currentTagsList = p.streamTags ? [...p.streamTags] : [];
+        renderTagPills();
+        document.getElementById('progSubmitLabel').textContent = 'Update Program';
+        document.getElementById('progFormTitle').textContent = 'Edit Program';
+        document.getElementById('progName').focus();
     }
 
-    // --- Utils ---
-    function openModal(id) { document.getElementById(id).classList.add('show'); document.getElementById(id).style.display='flex'; }
-    function closeModal(id) { document.getElementById(id).classList.remove('show'); setTimeout(()=>document.getElementById(id).style.display='none', 300); }
-    window.onclick = function(e) { if(e.target.classList.contains('modal-overlay')) { e.target.classList.remove('show'); setTimeout(()=>e.target.style.display='none', 300); } }
+    function clearProgramForm() {
+        document.getElementById('progIndex').value = '-1';
+        document.getElementById('progName').value = '';
+        document.getElementById('progMerit').value = '';
+        document.getElementById('progDuration').value = '';
+        document.getElementById('progDeadline').value = '';
+        currentTagsList = [];
+        renderTagPills();
+        document.getElementById('progNameError').classList.remove('visible');
+        document.getElementById('progName').classList.remove('error');
+        document.getElementById('progSubmitLabel').textContent = 'Add to List';
+        document.getElementById('progFormTitle').textContent = 'Add New Program';
+    }
+
+    function pushProgramToLocal() {
+        const nameEl = document.getElementById('progName');
+        const name = nameEl.value.trim();
+        if (!name) {
+            nameEl.classList.add('error');
+            document.getElementById('progNameError').classList.add('visible');
+            nameEl.focus();
+            return;
+        }
+        nameEl.classList.remove('error');
+        document.getElementById('progNameError').classList.remove('visible');
+
+        const idx = parseInt(document.getElementById('progIndex').value);
+        const p = {
+            programId: idx >= 0 ? currentUniForPrograms.programs[idx].programId : `prog-${Date.now()}`,
+            name,
+            minRequiredPercentage: parseFloat(document.getElementById('progMerit').value) || 0,
+            duration: document.getElementById('progDuration').value,
+            applicationDeadline: document.getElementById('progDeadline').value,
+            streamTags: [...currentTagsList]
+        };
+
+        if (!currentUniForPrograms.programs) currentUniForPrograms.programs = [];
+        if (idx >= 0) currentUniForPrograms.programs[idx] = p;
+        else currentUniForPrograms.programs.push(p);
+
+        renderProgramsList();
+        clearProgramForm();
+        toast(idx >= 0 ? 'Program updated in list.' : 'Program added to list.', 'info');
+    }
+
+    function removeProgram(i) {
+        currentUniForPrograms.programs.splice(i, 1);
+        renderProgramsList();
+    }
+
+    async function commitProgramsToBackend() {
+        const btn = document.getElementById('saveProgBtn');
+        btn.classList.add('btn-loading'); btn.disabled = true;
+        const ok = await sendRequest(`${API_BASE}/${currentUniForPrograms.id}`, 'PUT', currentUniForPrograms);
+        btn.classList.remove('btn-loading'); btn.disabled = false;
+        if (ok) {
+            closeModal('programsModal');
+            toast('Programs saved successfully.', 'success');
+            fetchData();
+        }
+    }
+
+    /* ─────────────────────────────────────────────
+       TAG PILLS
+    ───────────────────────────────────────────── */
+    function focusTagInput() { document.getElementById('progTagsInput').focus(); }
+
+    function handleTagInput(e) {
+        const input = document.getElementById('progTagsInput');
+        const val = input.value.trim().replace(/,$/, '');
+        if ((e.key === 'Enter' || e.key === ',') && val) {
+            e.preventDefault();
+            addTag(val);
+            input.value = '';
+        } else if (e.key === 'Backspace' && !input.value && currentTagsList.length) {
+            currentTagsList.pop();
+            renderTagPills();
+        }
+    }
+
+    function handleTagInputChange(e) {
+        const v = e.target.value;
+        if (v.endsWith(',')) {
+            const tag = v.slice(0, -1).trim();
+            if (tag) addTag(tag);
+            e.target.value = '';
+        }
+    }
+
+    function addTag(tag) {
+        const clean = tag.trim();
+        if (clean && !currentTagsList.includes(clean)) {
+            currentTagsList.push(clean);
+            renderTagPills();
+        }
+    }
+
+    function removeTag(idx) {
+        currentTagsList.splice(idx, 1);
+        renderTagPills();
+    }
+
+    function renderTagPills() {
+        const wrap = document.getElementById('tagsWrap');
+        const inputEl = document.getElementById('progTagsInput');
+        // Remove old pills
+        wrap.querySelectorAll('.tag-pill').forEach(el => el.remove());
+        // Insert pills before the input
+        currentTagsList.forEach((tag, i) => {
+            const pill = document.createElement('span');
+            pill.className = 'tag-pill';
+            pill.innerHTML = `${escapeHtml(tag)}<button class="remove-tag" onclick="removeTag(${i})" type="button"><span class="material-icons-round">close</span></button>`;
+            wrap.insertBefore(pill, inputEl);
+        });
+        document.getElementById('progTagsHidden').value = currentTagsList.join(',');
+        inputEl.placeholder = currentTagsList.length ? '' : 'Type tag, press Enter or comma…';
+    }
+
+    /* ─────────────────────────────────────────────
+       MODALS
+    ───────────────────────────────────────────── */
+    function openModal(id) {
+        const el = document.getElementById(id);
+        el.style.display = 'flex';
+        requestAnimationFrame(() => el.classList.add('active'));
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        el.classList.remove('active');
+        setTimeout(() => { el.style.display = 'none'; }, 250);
+        document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e, id) {
+        if (e.target === e.currentTarget) closeModal(id);
+    }
+
+    /* ─────────────────────────────────────────────
+       CONFIRM DIALOG
+    ───────────────────────────────────────────── */
+    function showConfirm(title, message) {
+        return new Promise(resolve => {
+            _confirmResolve = resolve;
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            const btn = document.getElementById('confirmYesBtn');
+            btn.onclick = () => { closeModal('confirmDialog'); resolve(true); };
+            openModal('confirmDialog');
+        });
+    }
+
+    function dismissConfirm() {
+        closeModal('confirmDialog');
+        if (_confirmResolve) { _confirmResolve(false); _confirmResolve = null; }
+    }
+
+    /* ─────────────────────────────────────────────
+       TOAST
+    ───────────────────────────────────────────── */
+    function toast(message, type = 'info') {
+        const icons = { success: 'check_circle', error: 'error', info: 'info' };
+        const container = document.getElementById('toastContainer');
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        el.innerHTML = `<span class="toast-icon material-icons-round">${icons[type]}</span><span class="toast-text">${escapeHtml(message)}</span>`;
+        container.appendChild(el);
+        setTimeout(() => {
+            el.classList.add('out');
+            setTimeout(() => el.remove(), 280);
+        }, 3200);
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILS
+    ───────────────────────────────────────────── */
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Close modals on Escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            ['universityModal','programsModal','confirmDialog'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.classList.contains('active')) closeModal(id);
+            });
+        }
+    });
 </script>
 </body>
 </html>
