@@ -100,6 +100,12 @@
         }
         .header-left { display: flex; align-items: center; gap: 16px; }
         .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand-mobile { display: none; }
+        .brand-desktop { display: block; }
+        @media (max-width: 640px) {
+            .brand-mobile { display: block; }
+            .brand-desktop { display: none; }
+        }
         .header-divider { width: 1px; height: 20px; background: var(--border); }
         .header-subtitle { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
         .header-right { display: flex; align-items: center; gap: 10px; }
@@ -482,8 +488,8 @@
     <header>
         <div class="header-left">
             <div class="brand">
-                <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-brandmark-blue.webp" alt="Dakhla" style="height:30px;width:auto;">
-                <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-Logo-Blue-Admin.webp" alt="Dakhla" style="height:22px;width:auto;">
+                <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-brandmark-blue.webp" alt="Dakhla" class="brand-mobile" style="height:30px;width:auto;">
+                <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-Logo-Blue-Admin.webp" alt="Dakhla" class="brand-desktop" style="height:22px;width:auto;">
             </div>
             <div class="header-divider"></div>
             <div class="header-subtitle">Admin Panel</div>
