@@ -61,7 +61,6 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 9999; gap: 16px;
         }
-        #loadingScreen .logo-text { font-size: 28px; font-weight: 700; color: var(--blue); letter-spacing: -0.5px; }
         #loadingScreen .sub { font-size: 13px; color: var(--text-secondary); }
         .loader-dots { display: flex; gap: 6px; }
         .loader-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); opacity: 0.3; animation: dot-pulse 1.4s ease-in-out infinite; }
@@ -82,10 +81,6 @@
             box-shadow: var(--shadow-lg); border: 1px solid var(--border);
         }
         .auth-card .brand-lockup { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
-        .auth-card .brand-lockup .brand-icon {
-            width: 42px; height: 42px; background: var(--blue); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;
-        }
         .auth-card h2 { font-size: 22px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.3px; }
         .auth-card p { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
         .auth-error {
@@ -105,11 +100,6 @@
         }
         .header-left { display: flex; align-items: center; gap: 16px; }
         .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .brand-icon-sm {
-            width: 32px; height: 32px; background: var(--blue); border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;
-        }
-        .brand h1 { font-size: 17px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.2px; }
         .header-divider { width: 1px; height: 20px; background: var(--border); }
         .header-subtitle { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
         .header-right { display: flex; align-items: center; gap: 10px; }
@@ -455,7 +445,7 @@
 
 <!-- ── LOADING SCREEN ── -->
 <div id="loadingScreen">
-    <div class="logo-text">DAKHLA</div>
+    <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-Logo-Blue-Admin.webp" alt="Dakhla" style="height:48px;width:auto;margin-bottom:4px;">
     <div class="sub">Connecting to cloud…</div>
     <div class="loader-dots"><span></span><span></span><span></span></div>
 </div>
@@ -464,11 +454,7 @@
 <div id="authScreen">
     <div class="auth-card">
         <div class="brand-lockup">
-            <div class="brand-icon"><span class="material-icons-round">school</span></div>
-            <div>
-                <div style="font-size:18px;font-weight:700;color:var(--charcoal);letter-spacing:-0.3px">DAKHLA</div>
-                <div style="font-size:11px;color:var(--text-secondary);font-weight:500">Admin Dashboard</div>
-            </div>
+            <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-Logo-Blue-Admin.webp" alt="Dakhla" style="height:44px;width:auto;">
         </div>
         <div id="authError" class="auth-error">
             <span class="material-icons-round" style="font-size:18px">error_outline</span>
@@ -496,8 +482,8 @@
     <header>
         <div class="header-left">
             <div class="brand">
-                <div class="brand-icon-sm"><span class="material-icons-round" style="font-size:17px">school</span></div>
-                <h1>DAKHLA</h1>
+                <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-brandmark-blue.webp" alt="Dakhla" style="height:30px;width:auto;">
+                <img src="https://yaqooti.sa/wp-content/uploads/2026/06/Dakhla-Logo-Blue-Admin.webp" alt="Dakhla" style="height:22px;width:auto;">
             </div>
             <div class="header-divider"></div>
             <div class="header-subtitle">Admin Panel</div>
