@@ -734,6 +734,7 @@
        CONFIG
     ───────────────────────────────────────────── */
     const API_BASE = "https://dakhla-unity-api.onrender.com/api/universities";
+    const API_VERIFY = "https://dakhla-unity-api.onrender.com/api/verify";
 
     let allUniversities = [];
     let currentUniForPrograms = null;
@@ -781,20 +782,23 @@
         btn.classList.add('btn-loading');
         btn.disabled = true;
 
-        // Test key with a quick fetch
-        fetch(API_BASE, { headers: { 'x-api-key': key } })
+        // Test key against a secured endpoint so invalid keys are rejected
+        fetch(API_VERIFY, { headers: { 'x-api-key': key } })
             .then(res => {
                 btn.classList.remove('btn-loading');
                 btn.disabled = false;
-                if (res.status === 403) {
-                    document.getElementById('authErrorText').textContent = 'Invalid API key. Please check and try again.';
-                    errEl.classList.add('visible');
-                    input.focus();
-                } else {
+                if (res.ok) {
                     localStorage.setItem("dakhla_api_key", key);
                     ADMIN_KEY = key;
                     showApp();
                     fetchData();
+                } else if (res.status === 403) {
+                    document.getElementById('authErrorText').textContent = 'Invalid API key. Please check and try again.';
+                    errEl.classList.add('visible');
+                    input.focus();
+                } else {
+                    document.getElementById('authErrorText').textContent = 'Server error. Please try again in a moment.';
+                    errEl.classList.add('visible');
                 }
             })
             .catch(() => {
@@ -958,7 +962,7 @@
                     <span class="material-icons-round">edit</span>
                 </button>
                 <div class="spacer"></div>
-                <button class="btn-icon-sm delete" title="Delete University" onclick='confirmDelete("${uni.id}", "${escapeHtml(uni.name).replace(/"/g, '&quot;')}")'>
+                <button class="btn-icon-sm delete" title="Delete University" onclick='confirmDelete("${uni.id}", "${escapeHtml(uni.name)}")'>
                     <span class="material-icons-round">delete_outline</span>
                 </button>
             </div>
@@ -975,6 +979,7 @@
         try {
             const res = await fetch(url, opts);
             if (res.status === 403) { toast('Access denied. Your API key may have changed.', 'error'); return false; }
+            if (res.status === 404) { toast('This university no longer exists. Refreshing…', 'error'); fetchData(); return false; }
             if (!res.ok) { const t = await res.text(); toast(`Server error: ${t}`, 'error'); return false; }
             return true;
         } catch { toast('Network error. Please check your connection.', 'error'); return false; }
@@ -1293,7 +1298,7 @@
     ───────────────────────────────────────────── */
     function escapeHtml(str) {
         if (!str) return '';
-        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
     // Close modals on Escape key
@@ -1301,7 +1306,10 @@
         if (e.key === 'Escape') {
             ['universityModal','programsModal','confirmDialog'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el && el.classList.contains('active')) closeModal(id);
+                if (el && el.classList.contains('active')) {
+                    if (id === 'confirmDialog') dismissConfirm();
+                    else closeModal(id);
+                }
             });
         }
     });

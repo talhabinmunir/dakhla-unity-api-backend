@@ -58,6 +58,11 @@ app.get('/api/universities', async (req, res) => {
     }
 });
 
+// Verify that a supplied API key is valid (secured)
+app.get('/api/verify', verifyApiKey, (req, res) => {
+    res.json({ valid: true });
+});
+
 // Secured Routes
 app.post('/api/universities', verifyApiKey, async (req, res) => {
     const uni = new University(req.body);
@@ -76,6 +81,9 @@ app.put('/api/universities/:id', verifyApiKey, async (req, res) => {
             req.body,
             { new: true }
         );
+        if (!updatedUni) {
+            return res.status(404).json({ message: 'University not found' });
+        }
         res.json(updatedUni);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -84,7 +92,10 @@ app.put('/api/universities/:id', verifyApiKey, async (req, res) => {
 
 app.delete('/api/universities/:id', verifyApiKey, async (req, res) => {
     try {
-        await University.findOneAndDelete({ id: req.params.id });
+        const deletedUni = await University.findOneAndDelete({ id: req.params.id });
+        if (!deletedUni) {
+            return res.status(404).json({ message: 'University not found' });
+        }
         res.json({ message: 'University deleted' });
     } catch (err) {
         res.status(500).json({ message: err.message });
